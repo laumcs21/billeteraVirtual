@@ -1,0 +1,16 @@
+Nombre: Bryan
+ID: 10329
+Correo: bryancsfut@gmail.com
+Teléfono: 302
+Dirección: villa c
+Saldo Total: 500000.0
+Contraseña: 1111
+
+Nombre: zsd
+ID: 1234
+Correo: dv
+Teléfono: dv
+Dirección: zdv
+Saldo Total: 1.0
+Contraseña: 1111
+

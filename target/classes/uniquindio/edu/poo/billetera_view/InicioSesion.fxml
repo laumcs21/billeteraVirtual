@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Label?>
+
+<VBox alignment="BASELINE_LEFT" prefHeight="235.0" prefWidth="312.0" spacing="20.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uniquindio.edu.poo.billetera_controller.InicioSesionController">
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+   <children>
+      <TextField fx:id="identificacionField" opacity="0.48" promptText="Identificación" />
+      <PasswordField fx:id="contraseñaField" opacity="0.48" promptText="Contraseña" />
+      <Button alignment="BOTTOM_RIGHT" mnemonicParsing="false" text="Iniciar Sesión" onAction="#IniciarSesion"/>
+      <Button alignment="BOTTOM_LEFT" mnemonicParsing="false" text="Registrarse" onAction="#Registrarse"/>
+      <Label fx:id="mensajeLabel" layoutX="100.0" layoutY="150.0" text="Mensaje aquí"/>
+   </children>
+</VBox>
