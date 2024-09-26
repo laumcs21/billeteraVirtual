@@ -6,7 +6,7 @@
 <?import javafx.scene.control.Label?>
 
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uniquindio.edu.poo.billetera_controller.EliminarUsuarioController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uniquindio.edu.poo.billetera_controller.EliminacionUsuarioController">
    <children>
       <TextField fx:id="identificacionField" layoutX="71.0" layoutY="61.0" opacity="0.48" prefHeight="24.0" prefWidth="442.0" promptText="Identificación " />
       <Button layoutX="454.0" layoutY="118.0" mnemonicParsing="false" text="Eliminar" onAction = "#EliminarUsuario"/>

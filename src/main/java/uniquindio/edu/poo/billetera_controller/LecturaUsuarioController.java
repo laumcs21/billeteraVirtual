@@ -1,24 +1,44 @@
 package uniquindio.edu.poo.billetera_controller;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import uniquindio.edu.poo.billetera_app.App;
 import uniquindio.edu.poo.billetera_model.Billetera_virtual;
+import uniquindio.edu.poo.billetera_model.Usuario;
 
-public class EliminarUsuarioController {
+public class LecturaUsuarioController {
 
     @FXML
     private TextField identificacionField;
+
+    @FXML
+    private TextField nombreField;
+
+    @FXML
+    private TextField correoField;
+
+    @FXML
+    private TextField telefonoField;
+
+    @FXML
+    private TextField direccionField;
+
+    @FXML
+    private TextField saldoActualField;
 
     @FXML
     private Label mensajeLabel;
 
     private Billetera_virtual billeteraVirtual;
 
-    public EliminarUsuarioController() {
+    private Usuario usuarioEncontrado;
+
+    public LecturaUsuarioController() {
         this.billeteraVirtual = Billetera_virtual.getInstancia();
     }
 
@@ -41,28 +61,45 @@ public class EliminarUsuarioController {
     }
 
     @FXML
-    private void EliminarUsuario() throws IOException {
+    private void BuscarUsuario() throws IOException {
         String identificacion = identificacionField.getText();
 
-        if (identificacion.isEmpty() || identificacion == null) {
+        if (identificacion.isEmpty()) {
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("Por favor, ingrese una identificación.");
             mensajeLabel.setStyle("-fx-text-fill: red;");
             return;
         }
+
         try {
-            billeteraVirtual.getUsuarioCRUD().eliminar(identificacion);
-            mensajeLabel.setVisible(true);
-            mensajeLabel.setText("Usuario eliminado exitosamente.");
+            usuarioEncontrado = billeteraVirtual.getUsuarioCRUD().leer(identificacion);
+            if (usuarioEncontrado != null) {
+                llenarCamposConUsuario(usuarioEncontrado);
+                mensajeLabel.setVisible(false);
+            } else {
+                mensajeLabel.setVisible(true);
+                mensajeLabel.setText("El usuario no está registrado.");
+                mensajeLabel.setStyle("-fx-text-fill: red;");
+            }
         } catch (Exception e) {
             mensajeLabel.setVisible(true);
-            mensajeLabel.setText("El usuario no está registrado.");
+            mensajeLabel.setText("Error al buscar el usuario.");
+            mensajeLabel.setStyle("-fx-text-fill: red;");
         }
+    }
+
+    private void llenarCamposConUsuario(Usuario usuario) {
+        DecimalFormat formatoDecimal = new DecimalFormat("#");
+        nombreField.setText(usuario.getNombre());
+        correoField.setText(usuario.getCorreo());
+        telefonoField.setText(usuario.getTelefono());
+        direccionField.setText(usuario.getDireccion());
+        saldoActualField.setText(formatoDecimal.format(usuario.getSaldoTotal()));
     }
 
     @FXML
     private void Volver() throws IOException {
-        App.setRoot("GestionarUsuarios");
+        App.setRoot("GestionUsuarios");
     }
 
 }

@@ -8,7 +8,7 @@ import uniquindio.edu.poo.billetera_app.App;
 import uniquindio.edu.poo.billetera_model.Billetera_virtual;
 import uniquindio.edu.poo.billetera_model.Usuario;
 
-public class CrearUsuarioController {
+public class CreacionUsuarioController {
 
     @FXML
     private TextField identificacionField;
@@ -36,7 +36,7 @@ public class CrearUsuarioController {
 
     private Billetera_virtual billeteraVirtual;
 
-    public CrearUsuarioController() {
+    public CreacionUsuarioController() {
         this.billeteraVirtual = Billetera_virtual.getInstancia();
     }
 
@@ -109,6 +109,6 @@ public class CrearUsuarioController {
 
     @FXML
     private void Volver() throws IOException {
-        App.setRoot("GestionarUsuarios");
+        App.setRoot("GestionUsuarios");
     }
 }

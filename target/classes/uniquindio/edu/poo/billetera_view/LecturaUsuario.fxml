@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.control.Label?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uniquindio.edu.poo.billetera_controller.LecturaUsuarioController">
+   <children>
+      <TextField fx:id="identificacionField" layoutX="54.0" layoutY="44.0" opacity="0.48" prefHeight="25.0" prefWidth="478.0" promptText="Identificación" />
+      <Button layoutX="481.0" layoutY="98.0" mnemonicParsing="false" onAction="#BuscarUsuario" text="Buscar" />
+      <TextField fx:id="nombreField" editable="false" layoutX="54.0" layoutY="139.0" opacity="0.48" prefHeight="25.0" prefWidth="328.0" text="Nombre Completo" />
+      <TextField fx:id="correoField" editable="false" layoutX="54.0" layoutY="188.0" opacity="0.48" prefHeight="25.0" prefWidth="328.0" text="Correo" />
+      <TextField fx:id="telefonoField" editable="false" layoutX="54.0" layoutY="232.0" opacity="0.48" prefHeight="25.0" prefWidth="328.0" text="Telefono" />
+      <TextField fx:id="direccionField" editable="false" layoutX="54.0" layoutY="276.0" opacity="0.48" prefHeight="25.0" prefWidth="328.0" text="Dirección" />
+      <Button layoutX="481.0" layoutY="345.0" mnemonicParsing="false" onAction="#Volver" text="Volver" />
+      <TextField fx:id="saldoActualField" editable="false" layoutX="54.0" layoutY="320.0" opacity="0.48" prefHeight="25.0" prefWidth="328.0" text="Saldo Actual" />
+      <Label fx:id="mensajeLabel" layoutX="54.0" layoutY="415.0" text="Mensaje aquí"/>
+   </children>
+</Pane>

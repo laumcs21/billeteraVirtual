@@ -4,12 +4,12 @@
 <?import javafx.scene.layout.Pane?>
 
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uniquindio.edu.poo.billetera_controller.GestionarUsuariosController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uniquindio.edu.poo.billetera_controller.GestionUsuariosController">
    <children>
       <Button layoutX="107.0" layoutY="66.0" mnemonicParsing="false" text="Crear Usuario" onAction = "#CrearUsuario"/>
       <Button layoutX="107.0" layoutY="145.0" mnemonicParsing="false" text="Actualizar Usuario" onAction = "#ActualizarUsuario"/>
       <Button layoutX="107.0" layoutY="218.0" mnemonicParsing="false" text="Eliminar Usuario" onAction = "#EliminarUsuario"/>
-      <Button layoutX="107.0" layoutY="294.0" mnemonicParsing="false" text="BuscarUsuario" onAction = "#BuscarUsuario"/>
+      <Button layoutX="107.0" layoutY="294.0" mnemonicParsing="false" text="Buscar Usuario" onAction = "#BuscarUsuario"/>
       <Button layoutX="477.0" layoutY="340.0" mnemonicParsing="false" text="Volver" onAction = "#Volver"/>
    </children>
 </Pane>

@@ -4,26 +4,26 @@ import java.io.IOException;
 import javafx.fxml.FXML;
 import uniquindio.edu.poo.billetera_app.App;
 
-public class GestionarUsuariosController {
+public class GestionUsuariosController {
 
     @FXML
     private void CrearUsuario() throws IOException {
-        App.setRoot("CrearUsuario");
+        App.setRoot("CreacionUsuario");
     }
 
     @FXML
     private void ActualizarUsuario() throws IOException {
-        App.setRoot("ActualizarUsuario");
+        App.setRoot("ActualizacionUsuario");
     }
 
     @FXML
     private void EliminarUsuario() throws IOException {
-        App.setRoot("EliminarUsuario");
+        App.setRoot("EliminacionUsuario");
     }
 
     @FXML
     private void BuscarUsuario() throws IOException {
-        App.setRoot("BuscarUsuario");
+        App.setRoot("LecturaUsuario");
     }
 
     @FXML

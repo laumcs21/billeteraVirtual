@@ -8,7 +8,7 @@ public class AdministradorController {
 
     @FXML
     private void GestionarUsuarios() throws IOException {
-        App.setRoot("GestionarUsuarios");
+        App.setRoot("GestionUsuarios");
     }
 
     @FXML
