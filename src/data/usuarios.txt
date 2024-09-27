@@ -1,11 +1,3 @@
-Nombre: Bryan
-ID: 10329
-Correo: bryancsfut@gmail.com
-Teléfono: 302
-Dirección: villa c
-Saldo Total: 500000.0
-Contraseña: 1111
-
 Nombre: maria
 ID: 12345
 Correo: maria@gmail.com
@@ -14,10 +6,18 @@ Dirección: villa carolina
 Saldo Total: 1000000.0
 Contraseña: 1111
 
+Nombre: Bryan
+ID: 10329
+Correo: bryancsfut@gmail.com
+Teléfono: 3023578426
+Dirección: villa c
+Saldo Total: 500000.0
+Contraseña: 1111
+
 Nombre: jefferson
 ID: 1234
 Correo: jeff@gmail.com
-Teléfono: 305
+Teléfono: 305050505
 Dirección: filandia
 Saldo Total: 2.0E7
 Contraseña: 1111
