@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import uniquindio.edu.poo.billetera_app.App;
+import uniquindio.edu.poo.billetera_exception.CorreoElectronicoException;
 import uniquindio.edu.poo.billetera_model.Billetera_virtual;
 import uniquindio.edu.poo.billetera_model.Usuario;
 
@@ -101,6 +102,9 @@ public class CreacionUsuarioController {
         } catch (IllegalArgumentException e) {
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("El usuario ya está registrado.");
+        } catch (CorreoElectronicoException e) {
+            mensajeLabel.setVisible(true);
+            mensajeLabel.setText("El correo electrónico no es válido");
         } catch (Exception e) {
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("Error al crear el usuario");

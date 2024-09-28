@@ -22,3 +22,11 @@ Dirección: filandia
 Saldo Total: 2.0E7
 Contraseña: 1111
 
+Nombre: Camilo
+ID: 123456
+Correo: camilo@gmail.com
+Teléfono: 3056789654
+Dirección: barrio modelo
+Saldo Total: 1000000.0
+Contraseña: 1111
+

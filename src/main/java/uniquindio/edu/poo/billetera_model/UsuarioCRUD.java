@@ -1,7 +1,10 @@
 package uniquindio.edu.poo.billetera_model;
 
 import java.util.Optional;
+
+import uniquindio.edu.poo.billetera_exception.CorreoElectronicoException;
 import uniquindio.edu.poo.billetera_persistencia.Persistencia_usuario;
+import java.util.List;
 
 public class UsuarioCRUD implements CRUD<Usuario> {
 
@@ -13,9 +16,29 @@ public class UsuarioCRUD implements CRUD<Usuario> {
     }
 
     public Optional<Usuario> buscarUsuarioPorIdentificacion(String identificacion) {
-        return billetera.getUsuarios().stream()
-                .filter(usuario -> usuario.getId().equals(identificacion))
-                .findAny();
+        return buscarUsuarioRecursivo(billetera.getUsuarios(), identificacion, 0);
+    }
+
+    private Optional<Usuario> buscarUsuarioRecursivo(List<Usuario> usuarios, String identificacion, int indice) {
+        if (indice >= usuarios.size()) {
+            return Optional.empty();
+        }
+
+        Usuario usuario = usuarios.get(indice);
+        if (usuario.getId().equals(identificacion)) {
+            return Optional.of(usuario);
+        }
+
+        return buscarUsuarioRecursivo(usuarios, identificacion, indice + 1);
+    }
+
+    public static boolean buscarCaracter(String frase, char caracter) {
+        for (int i = 0; i < frase.length(); i++) {
+            if (frase.charAt(i) == caracter) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -26,12 +49,20 @@ public class UsuarioCRUD implements CRUD<Usuario> {
     }
 
     @Override
-    public Usuario crear(Usuario usuario) {
+    public Usuario crear(Usuario usuario) throws CorreoElectronicoException {
         if (buscarUsuarioPorIdentificacion(usuario.getId()).isPresent()) {
             throw new IllegalArgumentException("El usuario ya está registrado.");
         }
+
+        if (!buscarCaracter(usuario.getCorreo(), '@') || !buscarCaracter(usuario.getCorreo(), '.')
+                || !buscarCaracter(usuario.getCorreo(), 'c') || !buscarCaracter(usuario.getCorreo(), 'o')
+                || !buscarCaracter(usuario.getCorreo(), 'm')) {
+            throw new CorreoElectronicoException("El correo no es válido");
+        }
+
         billetera.getUsuarios().add(usuario);
         persistencia.guardarTodosLosUsuarios(billetera.getUsuarios());
+
         return usuario;
     }
 
