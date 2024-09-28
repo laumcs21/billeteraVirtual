@@ -8,12 +8,12 @@ public class AdministradorController {
 
     @FXML
     private void GestionarUsuarios() throws IOException {
-        App.setRoot("GestionUsuarios");
+        App.setRoot("GestionUsuarios", "Gestión Usuarios");
     }
 
     @FXML
     private void Volver() throws IOException {
-        App.setRoot("InicioSesion");
+        App.setRoot("InicioSesion", "Inicio Sesion");
     }
 
 }

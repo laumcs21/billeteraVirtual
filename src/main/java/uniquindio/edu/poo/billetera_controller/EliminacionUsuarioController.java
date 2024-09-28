@@ -62,7 +62,7 @@ public class EliminacionUsuarioController {
 
     @FXML
     private void Volver() throws IOException {
-        App.setRoot("GestionUsuarios");
+        App.setRoot("GestionUsuarios", "Gestión Usuarios");
     }
 
 }

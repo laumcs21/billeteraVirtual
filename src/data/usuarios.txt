@@ -6,27 +6,43 @@ Dirección: villa carolina
 Saldo Total: 1000000.0
 Contraseña: 1111
 
-Nombre: Bryan
-ID: 10329
-Correo: bryancsfut@gmail.com
-Teléfono: 3023578426
-Dirección: villa c
-Saldo Total: 500000.0
-Contraseña: 1111
-
-Nombre: jefferson
-ID: 1234
-Correo: jeff@gmail.com
-Teléfono: 305050505
-Dirección: filandia
-Saldo Total: 2.0E7
-Contraseña: 1111
-
 Nombre: Camilo
 ID: 123456
 Correo: camilo@gmail.com
 Teléfono: 3056789654
 Dirección: barrio modelo
 Saldo Total: 1000000.0
+Contraseña: 1111
+
+Nombre: roberto
+ID: 12345678
+Correo: rob@gmail.com
+Teléfono: 300876543
+Dirección: la adiela
+Saldo Total: 9000000.0
+Contraseña: 1111
+
+Nombre: laura
+ID: 1234567890
+Correo: lau@gmail.com
+Teléfono: 3003710164
+Dirección: villa carolina
+Saldo Total: 9000000.0
+Contraseña: 1111
+
+Nombre: jefferson
+ID: 1234
+Correo: jeff@gmail.com
+Teléfono: 3009876543
+Dirección: filandia
+Saldo Total: 2.0E7
+Contraseña: 1111
+
+Nombre: maycol
+ID: 1234567
+Correo: may@gmail.com
+Teléfono: 300987655
+Dirección: universidad del quindio
+Saldo Total: 300000.0
 Contraseña: 1111
 

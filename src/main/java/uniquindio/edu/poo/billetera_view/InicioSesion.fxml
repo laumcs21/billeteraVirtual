@@ -12,6 +12,7 @@
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
    </padding>
    <children>
+      <Label text="Inicio Sesión" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
       <TextField fx:id="identificacionField" opacity="0.48" promptText="Identificación" />
       <PasswordField fx:id="contraseñaField" opacity="0.48" promptText="Contraseña" />
       <Button alignment="BOTTOM_RIGHT" mnemonicParsing="false" text="Iniciar Sesión" onAction="#IniciarSesion"/>

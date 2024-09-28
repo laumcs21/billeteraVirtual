@@ -32,13 +32,8 @@ public class UsuarioCRUD implements CRUD<Usuario> {
         return buscarUsuarioRecursivo(usuarios, identificacion, indice + 1);
     }
 
-    public static boolean buscarCaracter(String frase, char caracter) {
-        for (int i = 0; i < frase.length(); i++) {
-            if (frase.charAt(i) == caracter) {
-                return true;
-            }
-        }
-        return false;
+    public static boolean buscarCadena(String frase, String busqueda) {
+        return frase.contains(busqueda);
     }
 
     @Override
@@ -54,9 +49,7 @@ public class UsuarioCRUD implements CRUD<Usuario> {
             throw new IllegalArgumentException("El usuario ya está registrado.");
         }
 
-        if (!buscarCaracter(usuario.getCorreo(), '@') || !buscarCaracter(usuario.getCorreo(), '.')
-                || !buscarCaracter(usuario.getCorreo(), 'c') || !buscarCaracter(usuario.getCorreo(), 'o')
-                || !buscarCaracter(usuario.getCorreo(), 'm')) {
+        if (!buscarCadena(usuario.getCorreo(), "@") || !buscarCadena(usuario.getCorreo(), ".com")) {
             throw new CorreoElectronicoException("El correo no es válido");
         }
 

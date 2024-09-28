@@ -69,12 +69,12 @@ public class InicioSesionController {
 
         Administrador admin = Administrador.getInstance();
         if (admin.getId().equals(identificacion) && admin.getContraseña().equals(contraseña)) {
-            App.setRoot("Administrador");
+            App.setRoot("Administrador", "Administrador");
         } else {
             try {
                 Usuario usuario = billeteraVirtual.getUsuarioCRUD().leer(identificacion);
                 if (usuario.getContraseña().equals(contraseña)) {
-                    App.setRoot("Usuario");
+                    App.setRoot("Usuario", "Usuario");
                 } else {
                     mensajeLabel.setVisible(true);
                     mensajeLabel.setText("Credenciales incorrectas.");
@@ -88,6 +88,6 @@ public class InicioSesionController {
 
     @FXML
     private void Registrarse() throws IOException {
-        App.setRoot("Registro");
+        App.setRoot("Registro", "Registro");
     }
 }

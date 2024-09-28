@@ -41,22 +41,22 @@ public class GestionUsuariosController {
 
     @FXML
     private void CrearUsuario() throws IOException {
-        App.setRoot("CreacionUsuario");
+        App.setRoot("CreacionUsuario", "Creación Usuario");
     }
 
     @FXML
     private void ActualizarUsuario() throws IOException {
-        App.setRoot("ActualizacionUsuario");
+        App.setRoot("ActualizacionUsuario", "Actualización Usuario");
     }
 
     @FXML
     private void EliminarUsuario() throws IOException {
-        App.setRoot("EliminacionUsuario");
+        App.setRoot("EliminacionUsuario", "Eliminación Usuario");
     }
 
     @FXML
     private void BuscarUsuario() throws IOException {
-        App.setRoot("LecturaUsuario");
+        App.setRoot("LecturaUsuario", "Lectura Usuario");
     }
 
     @FXML
@@ -91,6 +91,6 @@ public class GestionUsuariosController {
 
     @FXML
     private void Volver() throws IOException {
-        App.setRoot("Administrador");
+        App.setRoot("Administrador", "Administrador");
     }
 }
