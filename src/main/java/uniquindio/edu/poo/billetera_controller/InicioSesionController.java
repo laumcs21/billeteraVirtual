@@ -22,6 +22,7 @@ public class InicioSesionController {
     private Label mensajeLabel;
 
     private Billetera_virtual billeteraVirtual;
+    private boolean esAdmin;
 
     public InicioSesionController() {
         this.billeteraVirtual = Billetera_virtual.getInstancia();
@@ -70,11 +71,13 @@ public class InicioSesionController {
         Administrador admin = Administrador.getInstance();
         if (admin.getId().equals(identificacion) && admin.getContraseña().equals(contraseña)) {
             App.setRoot("Administrador", "Administrador");
+            esAdmin = true;
         } else {
             try {
                 Usuario usuario = billeteraVirtual.getUsuarioCRUD().leer(identificacion);
                 if (usuario.getContraseña().equals(contraseña)) {
                     App.setRoot("Usuario", "Usuario");
+                    esAdmin = false;
                 } else {
                     mensajeLabel.setVisible(true);
                     mensajeLabel.setText("Credenciales incorrectas.");

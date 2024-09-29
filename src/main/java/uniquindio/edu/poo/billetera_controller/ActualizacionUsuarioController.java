@@ -32,6 +32,7 @@ public class ActualizacionUsuarioController {
     private Label mensajeLabel;
 
     private Billetera_virtual billeteraVirtual;
+    private boolean esAdmin;
 
     private Usuario usuarioEncontrado;
 
@@ -64,6 +65,10 @@ public class ActualizacionUsuarioController {
 
     private void limpiarCampoTexto(TextField campoTexto) {
         campoTexto.clear();
+    }
+
+    public void setEsAdmin(boolean esAdmin) {
+        this.esAdmin = esAdmin;
     }
 
     @FXML
@@ -131,6 +136,10 @@ public class ActualizacionUsuarioController {
 
     @FXML
     private void Volver() throws IOException {
-        App.setRoot("GestionUsuarios", "Gestión Usuarios");
+        if (esAdmin) {
+            App.setRoot("Administrador", "Administrador");
+        } else {
+            App.setRoot("Usuario", "Usuario");
+        }
     }
 }
