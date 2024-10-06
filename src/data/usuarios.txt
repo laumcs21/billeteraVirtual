@@ -1,0 +1,7 @@
+36564,1111,maria,maria@gmail.com,3053013813,villa carolina,1000000.0
+123456,1111,Camilo,camilo@gmail.com,3056789654,barrio modelo,1000000.0
+12345678,1111,roberto,rob@gmail.com,300876543,la adiela,9000000.0
+1001,1111,laura,lau@gmail.com,3003710164,villa carolina,9000000.0
+1234,1111,jefferson,jeff@gmail.com,3009876543,filandia,2.0E7
+1234567,1111,maycol,may@gmail.com,300987655,universidad del quindio,300000.0
+10329,1111,bryan,braycsfut@gmail.com,3023578426,villa carolina,1000000.0
