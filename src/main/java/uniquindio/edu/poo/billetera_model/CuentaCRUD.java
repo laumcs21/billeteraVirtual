@@ -1,5 +1,6 @@
 package uniquindio.edu.poo.billetera_model;
 
+<<<<<<< HEAD
 import java.util.Optional;
 
 import uniquindio.edu.poo.billetera_persistencia.Persistencia_Cuenta;
@@ -64,4 +65,8 @@ public class CuentaCRUD implements CRUD<Cuenta> {
         return buscarCuentaPorId(identificacion)
                 .orElseThrow(() -> new IllegalArgumentException("La cuenta no está registrado."));
     }
+=======
+public class CuentaCRUD {
+
+>>>>>>> a21a333b0d6430c7dcb68350ba641dc77907185c
 }

@@ -9,10 +9,18 @@ import lombok.Setter;
 public class Administrador extends Persona {
 
     private static Administrador instancia;
+<<<<<<< HEAD
 
     private Administrador(String id, String contraseña, String nombre, String correo, String telefono,
             String direccion) {
         super(id, contraseña, nombre, correo, telefono, direccion);
+=======
+    public String contraseña;
+
+    private Administrador(String id, String contraseña, String nombre, String correo, String telefono,
+            String direccion) {
+        super(id, nombre, correo, telefono, direccion);
+>>>>>>> a21a333b0d6430c7dcb68350ba641dc77907185c
 
         this.contraseña = contraseña;
     }

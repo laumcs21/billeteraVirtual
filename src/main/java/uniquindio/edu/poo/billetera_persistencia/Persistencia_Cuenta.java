@@ -1,5 +1,6 @@
 package uniquindio.edu.poo.billetera_persistencia;
 
+<<<<<<< HEAD
 import java.util.List;
 
 import uniquindio.edu.poo.billetera_model.Cuenta;
@@ -74,4 +75,8 @@ public class Persistencia_Cuenta {
         }
         return cuentas;
     }
+=======
+public class Persistencia_Cuenta {
+
+>>>>>>> a21a333b0d6430c7dcb68350ba641dc77907185c
 }

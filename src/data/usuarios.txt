@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 36564,1111,maria,maria@gmail.com,3053013813,villa carolina,1000000.0
 123456,1111,Camilo,camilo@gmail.com,3056789654,barrio modelo,1000000.0
 12345678,1111,roberto,rob@gmail.com,300876543,la adiela,9000000.0
@@ -5,3 +6,53 @@
 1234,1111,jefferson,jeff@gmail.com,3009876543,filandia,2.0E7
 1234567,1111,maycol,may@gmail.com,300987655,universidad del quindio,300000.0
 10329,1111,bryan,braycsfut@gmail.com,3023578426,villa carolina,1000000.0
+=======
+Nombre: maria
+ID: 12345
+Correo: maria@gmail.com
+Teléfono: 3053013813
+Dirección: villa carolina
+Saldo Total: 1000000.0
+Contraseña: 1111
+
+Nombre: Camilo
+ID: 123456
+Correo: camilo@gmail.com
+Teléfono: 3056789654
+Dirección: barrio modelo
+Saldo Total: 1000000.0
+Contraseña: 1111
+
+Nombre: roberto
+ID: 12345678
+Correo: rob@gmail.com
+Teléfono: 300876543
+Dirección: la adiela
+Saldo Total: 9000000.0
+Contraseña: 1111
+
+Nombre: laura
+ID: 1234567890
+Correo: lau@gmail.com
+Teléfono: 3003710164
+Dirección: villa carolina
+Saldo Total: 9000000.0
+Contraseña: 1111
+
+Nombre: jefferson
+ID: 1234
+Correo: jeff@gmail.com
+Teléfono: 3009876543
+Dirección: filandia
+Saldo Total: 2.0E7
+Contraseña: 1111
+
+Nombre: maycol
+ID: 1234567
+Correo: may@gmail.com
+Teléfono: 300987655
+Dirección: universidad del quindio
+Saldo Total: 300000.0
+Contraseña: 1111
+
+>>>>>>> a21a333b0d6430c7dcb68350ba641dc77907185c

@@ -6,7 +6,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import uniquindio.edu.poo.billetera_app.App;
 import uniquindio.edu.poo.billetera_model.Billetera_virtual;
+<<<<<<< HEAD
 import uniquindio.edu.poo.billetera_model.Sesion;
+=======
+>>>>>>> a21a333b0d6430c7dcb68350ba641dc77907185c
 import uniquindio.edu.poo.billetera_model.Usuario;
 
 public class ActualizacionUsuarioController {
@@ -33,6 +36,10 @@ public class ActualizacionUsuarioController {
     private Label mensajeLabel;
 
     private Billetera_virtual billeteraVirtual;
+<<<<<<< HEAD
+=======
+    private boolean esAdmin;
+>>>>>>> a21a333b0d6430c7dcb68350ba641dc77907185c
 
     private Usuario usuarioEncontrado;
 
@@ -67,6 +74,13 @@ public class ActualizacionUsuarioController {
         campoTexto.clear();
     }
 
+<<<<<<< HEAD
+=======
+    public void setEsAdmin(boolean esAdmin) {
+        this.esAdmin = esAdmin;
+    }
+
+>>>>>>> a21a333b0d6430c7dcb68350ba641dc77907185c
     @FXML
     private void BuscarUsuario() throws IOException {
         String identificacion = identificacionField.getText();
@@ -132,7 +146,11 @@ public class ActualizacionUsuarioController {
 
     @FXML
     private void Volver() throws IOException {
+<<<<<<< HEAD
         if (Sesion.getEsAdmin()) {
+=======
+        if (esAdmin) {
+>>>>>>> a21a333b0d6430c7dcb68350ba641dc77907185c
             App.setRoot("Administrador", "Administrador");
         } else {
             App.setRoot("Usuario", "Usuario");

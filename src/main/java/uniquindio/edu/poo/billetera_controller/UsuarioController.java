@@ -18,7 +18,11 @@ public class UsuarioController {
 
     @FXML
     private void Cuentas() throws IOException {
+<<<<<<< HEAD
         App.setRoot("BusquedaCuentasUsuario", "Busqueda Cuentas Usuario");
+=======
+        App.setRoot("ActualizacionUsuario", "Actualización Usuario");
+>>>>>>> a21a333b0d6430c7dcb68350ba641dc77907185c
     }
 
     @FXML
