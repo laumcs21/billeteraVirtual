@@ -90,7 +90,7 @@ public class CreacionCuentaController {
         String numeroCuentaUnico = GeneradorNumeroCuenta.generarNumeroUnico(10, cuentasExistentes);
 
         Cuenta nuevaCuenta = new Cuenta(idUsuario, idCuentaUnico, nombreBanco, numeroCuentaUnico,
-                tipoCuentaSeleccionado);
+                tipoCuentaSeleccionado, 0.0);
 
         billeteraVirtual.getCuentaCRUD().crear(nuevaCuenta);
 

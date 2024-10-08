@@ -34,7 +34,8 @@ public class Persistencia_Cuenta {
             textoCuenta.append(cuenta.getId()).append("@@");
             textoCuenta.append(cuenta.getNombreBanco()).append("@@");
             textoCuenta.append(cuenta.getNumeroCuenta()).append("@@");
-            textoCuenta.append(cuenta.getTipoCuenta()).append("\n");
+            textoCuenta.append(cuenta.getTipoCuenta()).append("@@");
+            textoCuenta.append(cuenta.getSaldo()).append("\n");
         }
         try {
             ArchivoUtil.guardarArchivo(RUTA_ARCHIVO, textoCuenta.toString(), false);
@@ -64,9 +65,10 @@ public class Persistencia_Cuenta {
 
                 String idUsuario = split[0];
 
-                TipoCuenta tipoCuenta = TipoCuenta.valueOf(split[split.length - 1]);
+                TipoCuenta tipoCuenta = TipoCuenta.valueOf(split[split.length - 2]);
 
-                Cuenta cuenta = new Cuenta(idUsuario, split[1], split[2], split[3], tipoCuenta);
+                Cuenta cuenta = new Cuenta(idUsuario, split[1], split[2], split[3], tipoCuenta,
+                        Double.valueOf(split[5]));
                 cuentas.add(cuenta);
             }
         } catch (Exception e) {

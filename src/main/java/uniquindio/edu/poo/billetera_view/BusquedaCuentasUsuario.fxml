@@ -16,6 +16,7 @@
             <TableColumn fx:id="numeroField" prefWidth="182.00006103515625" text="Número" />
             <TableColumn fx:id="bancoField" minWidth="0.0" prefWidth="101.3333740234375" text="Banco" />
             <TableColumn fx:id="tipoField" prefWidth="96.6666259765625" text="Tipo" />
+            <TableColumn fx:id="saldoField" text="Saldo" />
         </columns>
       </TableView>
    </children>

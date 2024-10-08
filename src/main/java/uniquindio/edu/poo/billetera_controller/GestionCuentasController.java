@@ -33,7 +33,7 @@ public class GestionCuentasController {
     private TableColumn<Cuenta, String> tipoField;
 
     @FXML
-    private TableColumn<Usuario, Double> saldoActualField;
+    private TableColumn<Usuario, Double> saldoField;
 
     private ObservableList<Cuenta> cuentas = FXCollections
             .observableArrayList(Billetera_virtual.getInstancia().getCuentas());
@@ -65,6 +65,7 @@ public class GestionCuentasController {
         numeroField.setCellValueFactory(new PropertyValueFactory<>("numeroCuenta"));
         bancoField.setCellValueFactory(new PropertyValueFactory<>("nombreBanco"));
         tipoField.setCellValueFactory(new PropertyValueFactory<>("tipoCuenta"));
+        saldoField.setCellValueFactory(new PropertyValueFactory<>("saldo"));
     }
 
     @FXML

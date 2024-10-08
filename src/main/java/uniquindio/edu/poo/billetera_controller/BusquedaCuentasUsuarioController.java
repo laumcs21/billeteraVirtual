@@ -36,6 +36,9 @@ public class BusquedaCuentasUsuarioController {
     @FXML
     private TableColumn<Cuenta, String> tipoField;
 
+    @FXML
+    private TableColumn<Usuario, Double> saldoField;
+
     private static Billetera_virtual billeteraVirtual;
     String idUsuario = Sesion.getIdUsuario();
 
@@ -52,6 +55,7 @@ public class BusquedaCuentasUsuarioController {
         numeroField.setCellValueFactory(new PropertyValueFactory<>("numeroCuenta"));
         bancoField.setCellValueFactory(new PropertyValueFactory<>("nombreBanco"));
         tipoField.setCellValueFactory(new PropertyValueFactory<>("tipoCuenta"));
+        saldoField.setCellValueFactory(new PropertyValueFactory<>("saldo"));
         mostrarCuentas();
     }
 

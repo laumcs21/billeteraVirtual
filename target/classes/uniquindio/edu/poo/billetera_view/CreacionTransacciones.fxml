@@ -14,7 +14,7 @@
       <TextField fx:id="montoField" layoutX="89.0" layoutY="171.0" opacity="0.48" text="Monto" />
       <TextField fx:id="numeroCuentaDestinoField" layoutX="89.0" layoutY="312.0" opacity="0.48" text="Número cuenta destino" visible="false" />
       <TextArea fx:id="descripcionField" layoutX="88.0" layoutY="213.0" opacity="0.48" prefHeight="49.0" prefWidth="458.0" text="Descripción (opcional)" />
-      <Label fx:id="mensajeLabel" layoutX="89.0" layoutY="385.0" prefHeight="17.0" prefWidth="208.0" text="Mensaje aquí" />
+      <Label fx:id="mensajeLabel" layoutX="89.0" layoutY="385.0" prefHeight="17.0" prefWidth="303.0" text="Mensaje aquí" />
       <ComboBox fx:id="tipoTransaccionComboBox" layoutX="89.0" layoutY="125.0" prefWidth="150.0" promptText="Tipo Transacción" />
       <TextField fx:id="numeroCuentaOrigenField" layoutX="89.0" layoutY="86.0" opacity="0.48" text="Numero Cuenta Origen" />
       <TextField fx:id="categoriaField" layoutX="89.0" layoutY="277.0" opacity="0.48" text="Categoría (opcional)" />

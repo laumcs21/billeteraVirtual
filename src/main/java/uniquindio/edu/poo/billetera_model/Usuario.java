@@ -14,6 +14,16 @@ public class Usuario extends Persona {
             double saldoTotal) {
         super(id, contraseña, nombre, correo, telefono, direccion);
         this.saldoTotal = saldoTotal;
+        this.billeteraVirtual = Billetera_virtual.getInstancia();
+    }
+
+    public void actualizarSaldoTotal() {
+        double nuevoSaldoTotal = billeteraVirtual.getCuentas().stream()
+                .filter(cuenta -> cuenta.getIdUsuario().equals(this.getId()))
+                .mapToDouble(Cuenta::getSaldo)
+                .sum();
+
+        this.saldoTotal = nuevoSaldoTotal;
     }
 
 }

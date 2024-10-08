@@ -14,11 +14,12 @@
       <Button layoutX="451.0" layoutY="373.0" mnemonicParsing="false" onAction="#Volver" text="Volver" />
       <TableView fx:id="tablaCuentas" layoutX="10.0" layoutY="138.0" prefHeight="216.0" prefWidth="600.0">
         <columns>
-          <TableColumn fx:id="identificacionField" prefWidth="114.66665649414062" text="ID Usuario" />
-          <TableColumn fx:id="codigoField" prefWidth="85.33331298828125" text="Código" />
-            <TableColumn fx:id="numeroField" prefWidth="182.00006103515625" text="Número" />
-            <TableColumn fx:id="bancoField" minWidth="0.0" prefWidth="101.3333740234375" text="Banco" />
-            <TableColumn fx:id="tipoField" prefWidth="96.6666259765625" text="Tipo" />
+          <TableColumn fx:id="identificacionField" prefWidth="88.66665935516357" text="ID Usuario" />
+          <TableColumn fx:id="codigoField" prefWidth="82.6666488647461" text="Código" />
+            <TableColumn fx:id="numeroField" prefWidth="118.66670227050781" text="Número" />
+            <TableColumn fx:id="bancoField" minWidth="0.0" prefWidth="152.66668701171875" text="Banco" />
+            <TableColumn fx:id="tipoField" prefWidth="74.66665649414062" text="Tipo" />
+            <TableColumn fx:id="saldoField" text="Saldo" />
         </columns>
       </TableView>
    </children>
