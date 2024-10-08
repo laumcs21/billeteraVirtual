@@ -1,14 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.Pane?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uniquindio.edu.poo.billetera_controller.GestionTransaccionesController">
    <children>
-      <Button layoutX="87.0" layoutY="77.0" mnemonicParsing="false" onAction="#CrearTransaccion" text="Crear Transacción" />
-      <Button layoutX="87.0" layoutY="136.0" mnemonicParsing="false" onAction="#Historial" text="Historial" />
-      <Button layoutX="87.0" layoutY="200.0" mnemonicParsing="false" onAction="#BuscarTransaccion" text="Buscar Transacción" />
-      <Button layoutX="449.0" layoutY="310.0" mnemonicParsing="false" onAction="#Volver" text="Volver" />
+      <Button layoutX="51.0" layoutY="29.0" mnemonicParsing="false" onAction="#CrearTransaccion" text="Crear Transacción" />
+      <Button layoutX="528.0" layoutY="361.0" mnemonicParsing="false" onAction="#Volver" text="Volver" />
+      <TableView fx:id="tablaTransacciones" layoutX="8.0" layoutY="80.0" prefHeight="275.0" prefWidth="579.0">
+         <columns>
+            <TableColumn fx:id="fechaField" prefWidth="80" text="Fecha" />
+            <TableColumn fx:id="IDtransaccionField" prefWidth="60.666656494140625" text="Id" />
+            <TableColumn fx:id="idUsuarioField" prefWidth="98" text="Id Usuario" />
+            <TableColumn fx:id="cuentaOrigenField" prefWidth="102.0" text="Cuenta Origen" />
+            <TableColumn fx:id="tipoField" prefWidth="65" text="Tipo" />
+            <TableColumn fx:id="montoField" prefWidth="74.0" text="Monto" />
+            <TableColumn fx:id="cuentaDestinoField" minWidth="0.0" prefWidth="101.3333740234375" text="Cuenta Destino" />
+            <TableColumn fx:id="descripcionField" prefWidth="150" text="Descripción" />
+            <TableColumn fx:id="categoriaField" prefWidth="100" text="Categoría" />
+         </columns>
+      </TableView>
+      <Button layoutX="404.0" layoutY="29.0" mnemonicParsing="false" onAction="#mostrarTransacciones" text="Mostrar Transacciones" />
    </children>
 </Pane>

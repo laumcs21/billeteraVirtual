@@ -3,7 +3,6 @@ package uniquindio.edu.poo.billetera_controller;
 import java.io.IOException;
 import javafx.fxml.FXML;
 import uniquindio.edu.poo.billetera_app.App;
-import uniquindio.edu.poo.billetera_model.Sesion;
 
 public class AdministradorController {
 
@@ -19,7 +18,7 @@ public class AdministradorController {
 
     @FXML
     private void GestionarTransacciones() throws IOException {
-        App.setRoot("GestionCuentas", "Gestión Cuentas");
+        App.setRoot("GestionTransacciones", "Gestión Transacciones");
     }
 
     @FXML

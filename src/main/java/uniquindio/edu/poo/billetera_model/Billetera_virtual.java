@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import uniquindio.edu.poo.billetera_persistencia.Persistencia_usuario;
 import uniquindio.edu.poo.billetera_persistencia.Persistencia_Cuenta;
+import uniquindio.edu.poo.billetera_persistencia.Persistencia_Transaccion;
 
 @Getter
 @Setter
@@ -16,16 +17,20 @@ public class Billetera_virtual {
     private static Billetera_virtual instancia;
     private List<Usuario> usuarios;
     private List<Cuenta> cuentas;
+    private List<Transaccion> transacciones;
     private List<Presupuesto> presupuesto;
     private UsuarioCRUD usuarioCRUD;
     private CuentaCRUD cuentaCRUD;
+    private TransaccionCRUD transaccionCRUD;
 
     private Billetera_virtual() {
         this.usuarios = new LinkedList<>();
         this.cuentas = new LinkedList<>();
+        this.transacciones = new LinkedList<>();
         this.presupuesto = new LinkedList<>();
         this.usuarioCRUD = new UsuarioCRUD(this);
         this.cuentaCRUD = new CuentaCRUD(this);
+        this.transaccionCRUD = new TransaccionCRUD(this);
     }
 
     public static Billetera_virtual getInstancia() {
@@ -35,6 +40,7 @@ public class Billetera_virtual {
                     instancia = new Billetera_virtual();
                     instancia.cargarDatosUsuarios();
                     instancia.cargarDatosCuentas();
+                    instancia.cargarDatosTransacciones();
                 }
             }
         }
@@ -65,4 +71,16 @@ public class Billetera_virtual {
         }
     }
 
+    private void cargarDatosTransacciones() {
+        Persistencia_Transaccion persistencia = Persistencia_Transaccion.getInstancia();
+        try {
+            this.transacciones.clear();
+            List<Transaccion> transaccionesCargadas = persistencia.cargarTransacciones();
+            if (transaccionesCargadas != null) {
+                this.transacciones.addAll(transaccionesCargadas);
+            }
+        } catch (IOException e) {
+            System.err.println("Error al cargar las cuentas desde el archivo: " + e.getMessage());
+        }
+    }
 }

@@ -1,33 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.MenuButton?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="467.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uniquindio.edu.poo.billetera_controller.CreacionTransaccionesController">
    <children>
-      <Button layoutX="92.0" layoutY="282.0" mnemonicParsing="false" onAction="#Crear" text="Crear" />
-      <Button layoutX="460.0" layoutY="328.0" mnemonicParsing="false" onAction="#Volver" text="Volver" />
-      <MenuButton fx:id="Cuenta" layoutX="88.0" layoutY="53.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="228.0" text="Cuenta">
-        <items>
-          <MenuItem mnemonicParsing="false" text="Action 1" />
-          <MenuItem mnemonicParsing="false" text="Action 2" />
-        </items>
-      </MenuButton>
-      <MenuButton fx:id="TipoTransaccion" layoutX="88.0" layoutY="93.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="228.0" text="Tipo de Transacción ">
-         <items>
-            <MenuItem mnemonicParsing="false" text="Action 1" />
-            <MenuItem mnemonicParsing="false" text="Action 2" />
-         </items>
-      </MenuButton>
-      <TextField fx:id="Monto" layoutX="88.0" layoutY="134.0" opacity="0.48" text="Monto" />
-      <TextField fx:id="IdCuentaDestino" layoutX="88.0" layoutY="240.0" opacity="0.48" text="ID cuenta destino" visible="false" />
-      <TextField fx:id="Codigo" layoutX="88.0" layoutY="240.0" opacity="0.48" text="Código" visible="false" />
-      <TextArea fx:id="Descripcion" layoutX="87.0" layoutY="176.0" opacity="0.48" prefHeight="49.0" prefWidth="458.0" text="Descripción" />
-      <Label layoutX="92.0" layoutY="320.0" prefHeight="17.0" prefWidth="208.0" text="Mensaje aquí" />
+      <Button layoutX="89.0" layoutY="347.0" mnemonicParsing="false" onAction="#Crear" text="Crear" />
+      <Button layoutX="456.0" layoutY="415.0" mnemonicParsing="false" onAction="#Volver" text="Volver" />
+      <TextField fx:id="montoField" layoutX="89.0" layoutY="171.0" opacity="0.48" text="Monto" />
+      <TextField fx:id="numeroCuentaDestinoField" layoutX="89.0" layoutY="312.0" opacity="0.48" text="Número cuenta destino" visible="false" />
+      <TextArea fx:id="descripcionField" layoutX="88.0" layoutY="213.0" opacity="0.48" prefHeight="49.0" prefWidth="458.0" text="Descripción (opcional)" />
+      <Label fx:id="mensajeLabel" layoutX="89.0" layoutY="385.0" prefHeight="17.0" prefWidth="208.0" text="Mensaje aquí" />
+      <ComboBox fx:id="tipoTransaccionComboBox" layoutX="89.0" layoutY="125.0" prefWidth="150.0" promptText="Tipo Transacción" />
+      <TextField fx:id="numeroCuentaOrigenField" layoutX="89.0" layoutY="86.0" opacity="0.48" text="Numero Cuenta Origen" />
+      <TextField fx:id="categoriaField" layoutX="89.0" layoutY="277.0" opacity="0.48" text="Categoría (opcional)" />
+      <TextField fx:id="idUsuarioField" layoutX="89.0" layoutY="49.0" opacity="0.48" text="ID Usuario" />
    </children>
 </Pane>

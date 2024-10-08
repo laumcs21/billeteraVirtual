@@ -3,9 +3,9 @@ package uniquindio.edu.poo.billetera_model;
 import java.util.List;
 import java.util.Random;
 
-public class GeneradorCodigoCuenta {
+public class GenerarCodigoTransaccion {
 
-    public static String generarCodigoUnico(int longitud, List<Cuenta> cuentasExistentes) {
+    public static String generarCodigoUnico(int longitud, List<Transaccion> transaccionesExistentes) {
         String caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         Random random = new Random();
         String codigo;
@@ -17,13 +17,13 @@ public class GeneradorCodigoCuenta {
                 codigoBuilder.append(caracteres.charAt(index));
             }
             codigo = codigoBuilder.toString();
-        } while (codigoExiste(codigo, cuentasExistentes));
+        } while (codigoExiste(codigo, transaccionesExistentes));
 
         return codigo;
     }
 
-    private static boolean codigoExiste(String codigo, List<Cuenta> cuentasExistentes) {
-        return cuentasExistentes.stream()
-                .anyMatch(cuenta -> cuenta.getId().equals(codigo));
+    private static boolean codigoExiste(String codigo, List<Transaccion> transaccionesExistentes) {
+        return transaccionesExistentes.stream()
+                .anyMatch(transaccion -> transaccion.getId().equals(codigo));
     }
 }

@@ -13,7 +13,7 @@ public class UsuarioController {
 
     @FXML
     private void Transacciones() throws IOException {
-        App.setRoot("ActualizacionUsuario", "Actualización Usuario");
+        App.setRoot("GestionTransacciones", "Gestión transacciones");
     }
 
     @FXML
