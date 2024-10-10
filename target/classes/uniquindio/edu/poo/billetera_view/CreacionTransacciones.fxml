@@ -17,7 +17,7 @@
       <Label fx:id="mensajeLabel" layoutX="89.0" layoutY="385.0" prefHeight="17.0" prefWidth="303.0" text="Mensaje aquí" />
       <ComboBox fx:id="tipoTransaccionComboBox" layoutX="89.0" layoutY="125.0" prefWidth="150.0" promptText="Tipo Transacción" />
       <TextField fx:id="numeroCuentaOrigenField" layoutX="89.0" layoutY="86.0" opacity="0.48" text="Numero Cuenta Origen" />
-      <TextField fx:id="categoriaField" layoutX="89.0" layoutY="277.0" opacity="0.48" text="Categoría (opcional)" />
+      <ComboBox fx:id="categoriaComboBox" layoutX="89.0" layoutY="277.0" promptText="Seleccione una categoría" />
       <TextField fx:id="idUsuarioField" layoutX="89.0" layoutY="49.0" opacity="0.48" text="ID Usuario" />
    </children>
 </Pane>

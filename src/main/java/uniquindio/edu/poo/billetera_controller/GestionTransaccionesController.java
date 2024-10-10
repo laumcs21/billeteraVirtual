@@ -15,6 +15,7 @@ import uniquindio.edu.poo.billetera_model.Billetera_virtual;
 import uniquindio.edu.poo.billetera_model.Transaccion;
 import uniquindio.edu.poo.billetera_model.Usuario;
 import uniquindio.edu.poo.billetera_model.Sesion;
+import uniquindio.edu.poo.billetera_model.BuscarUsuarioPorID;
 
 public class GestionTransaccionesController {
 
@@ -75,24 +76,7 @@ public class GestionTransaccionesController {
         montoField.setCellValueFactory(new PropertyValueFactory<>("monto"));
         cuentaDestinoField.setCellValueFactory(new PropertyValueFactory<>("numeroCuentaDestino"));
         descripcionField.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
-        categoriaField.setCellValueFactory(new PropertyValueFactory<>("idCategoria"));
-    }
-
-    public static Usuario buscarUsuarioPorIdentificacion(String identificacion) {
-        return buscarUsuarioRecursivo(billeteraVirtual.getUsuarios(), identificacion, 0);
-    }
-
-    private static Usuario buscarUsuarioRecursivo(List<Usuario> usuarios, String identificacion, int indice) {
-        if (indice >= usuarios.size()) {
-            return null;
-        }
-
-        Usuario usuario = usuarios.get(indice);
-        if (usuario.getId().equals(identificacion)) {
-            return usuario;
-        }
-
-        return buscarUsuarioRecursivo(usuarios, identificacion, indice + 1);
+        categoriaField.setCellValueFactory(new PropertyValueFactory<>("nombreCategoria"));
     }
 
     @FXML
@@ -101,7 +85,7 @@ public class GestionTransaccionesController {
             tablaTransacciones.setItems(todasTransacciones);
         } else {
 
-            Usuario usuario = buscarUsuarioPorIdentificacion(idUsuario);
+            Usuario usuario = BuscarUsuarioPorID.buscarUsuarioPorIdentificacion(idUsuario);
 
             if (usuario != null) {
                 List<Transaccion> listaTransacciones = billeteraVirtual.getTransacciones().stream()

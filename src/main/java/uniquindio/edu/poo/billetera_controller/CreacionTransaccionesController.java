@@ -19,6 +19,7 @@ import uniquindio.edu.poo.billetera_model.TipoTransaccion;
 import uniquindio.edu.poo.billetera_model.Transaccion;
 import uniquindio.edu.poo.billetera_model.Usuario;
 import uniquindio.edu.poo.billetera_model.BuscarUsuarioPorID;
+import uniquindio.edu.poo.billetera_model.Categoria;
 import uniquindio.edu.poo.billetera_model.BuscarCuenta;
 
 public class CreacionTransaccionesController {
@@ -39,7 +40,7 @@ public class CreacionTransaccionesController {
     private TextArea descripcionField;
 
     @FXML
-    private TextField categoriaField;
+    private ComboBox<String> categoriaComboBox;
 
     @FXML
     private ComboBox<TipoTransaccion> tipoTransaccionComboBox;
@@ -61,11 +62,14 @@ public class CreacionTransaccionesController {
         montoField.setPromptText("Monto");
         numeroCuentaDestinoField.setPromptText("Numero Cuenta Destino");
         descripcionField.setPromptText("Descripción (opcional)");
-        categoriaField.setPromptText("Categoría (opcional)");
         tipoTransaccionComboBox.getItems().setAll(TipoTransaccion.values());
 
-        TextField[] fields = { idUsuarioField, numeroCuentaOrigenField, montoField, numeroCuentaDestinoField,
-                categoriaField };
+        List<Categoria> categorias = billeteraVirtual.getCategorias();
+        for (Categoria categoria : categorias) {
+            categoriaComboBox.getItems().add(categoria.getNombre());
+        }
+
+        TextField[] fields = { idUsuarioField, numeroCuentaOrigenField, montoField, numeroCuentaDestinoField };
 
         for (TextField field : fields) {
             field.setOnMouseClicked(event -> limpiarCampoTexto(field));
@@ -107,7 +111,7 @@ public class CreacionTransaccionesController {
         String numeroCuentaOrigen = numeroCuentaOrigenField.getText();
         String numeroCuentaDestino = numeroCuentaDestinoField.isVisible() ? numeroCuentaDestinoField.getText() : null;
         String descripcion = descripcionField.getText();
-        String categoria = categoriaField.getText();
+        String categoriaSeleccionada = categoriaComboBox.getValue();
         double monto;
         TipoTransaccion tipo = tipoTransaccionComboBox.getValue();
 
@@ -182,6 +186,19 @@ public class CreacionTransaccionesController {
             }
         }
 
+        // Obtener el código de la categoría seleccionada
+        Optional<Categoria> categoriaOpt = billeteraVirtual.getCategorias().stream()
+                .filter(categoria -> categoria.getNombre().equals(categoriaSeleccionada))
+                .findFirst();
+
+        if (!categoriaOpt.isPresent()) {
+            mensajeLabel.setText("La categoría seleccionada no es válida.");
+            mensajeLabel.setVisible(true);
+            return;
+        }
+
+        String codigoCategoria = categoriaOpt.get().getId();
+
         // Si es un administrador, verificar que el usuario exista
         if (Sesion.getEsAdmin()) {
             Optional<Usuario> usuarioOpt = billeteraVirtual.getUsuarios().stream()
@@ -204,7 +221,7 @@ public class CreacionTransaccionesController {
                                 : null)
                 .conDescripcion(
                         descripcion.isEmpty() || descripcion.equals("Descripción (opcional)") ? null : descripcion)
-                .conCategoria(categoria.isEmpty() || categoria.equals("Categoría (opcional)") ? null : categoria)
+                .conCategoria(codigoCategoria)
                 .build();
 
         // Guardar la transacción

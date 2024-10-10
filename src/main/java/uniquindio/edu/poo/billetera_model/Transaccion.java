@@ -74,6 +74,11 @@ public class Transaccion {
         }
     }
 
+    public String getNombreCategoria() {
+        Categoria categoria = BuscarCategoria.buscarCategoriaPorID(this.idCategoria);
+        return (categoria != null) ? categoria.getNombre() : " ";
+    }
+
     @Override
     public String toString() {
         return "Transaccion{" +
