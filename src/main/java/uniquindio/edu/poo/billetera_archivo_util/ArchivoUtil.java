@@ -6,10 +6,22 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.io.File;
 
 public class ArchivoUtil {
 
     public static void guardarArchivo(String ruta, String contenido, Boolean flagAnexarContenido) throws IOException {
+
+        File archivo = new File(ruta);
+        File directorio = archivo.getParentFile();
+
+        if (directorio != null && !directorio.exists()) {
+            directorio.mkdirs();
+        }
+
+        if (!archivo.exists()) {
+            archivo.createNewFile();
+        }
 
         FileWriter fw = new FileWriter(ruta, flagAnexarContenido);
         BufferedWriter bfw = new BufferedWriter(fw);

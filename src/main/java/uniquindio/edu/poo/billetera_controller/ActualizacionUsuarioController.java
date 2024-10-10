@@ -1,10 +1,13 @@
-package uniquindio.edu.poo.billetera_model;
+package uniquindio.edu.poo.billetera_controller;
 
 import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import uniquindio.edu.poo.billetera_app.App;
+import uniquindio.edu.poo.billetera_model.Billetera_virtual;
+import uniquindio.edu.poo.billetera_model.Usuario;
+import uniquindio.edu.poo.billetera_model.Sesion;
 
 public class ActualizacionUsuarioController {
 
