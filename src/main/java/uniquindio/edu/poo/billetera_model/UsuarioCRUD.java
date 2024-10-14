@@ -2,6 +2,7 @@ package uniquindio.edu.poo.billetera_model;
 
 import java.util.Optional;
 
+import uniquindio.edu.poo.billetera_archivo_util.ArchivoUtil;
 import uniquindio.edu.poo.billetera_exception.CorreoElectronicoException;
 import uniquindio.edu.poo.billetera_persistencia.Persistencia_usuario;
 import java.util.List;
@@ -41,6 +42,7 @@ public class UsuarioCRUD implements CRUD<Usuario> {
         eliminar(usuario.getId());
         billetera.getUsuarios().add(usuario);
         persistencia.guardarTodosLosUsuarios(billetera.getUsuarios());
+        ArchivoUtil.guardarRegistroLog(" Usuario Actualizado--> "+ " ID:" + usuario.getId()+ " - Nombre: " + usuario.getNombre() + " - Correo: "+ usuario.getCorreo() + " - Telefono: "+ usuario.getTelefono() + " - Dirección: "+ usuario.getDireccion() + " - Saldo Total: "+ usuario.getSaldoTotal(), 1, " btnActualizarUsuarios", "C:\\td\\persistencia\\log\\logCrudUsuario.txt");
     }
 
     @Override
@@ -55,6 +57,7 @@ public class UsuarioCRUD implements CRUD<Usuario> {
 
         billetera.getUsuarios().add(usuario);
         persistencia.guardarTodosLosUsuarios(billetera.getUsuarios());
+        ArchivoUtil.guardarRegistroLog(" Usuario Registrado--> "+ " ID:" + usuario.getId()+ " - Nombre: " + usuario.getNombre() + " - Correo: "+ usuario.getCorreo() + " - Telefono: "+ usuario.getTelefono() + " - Dirección: "+ usuario.getDireccion() + " - Saldo Total: "+ usuario.getSaldoTotal(), 1, " btnCrearUsuarios", "C:\\td\\persistencia\\log\\logCrudUsuario.txt");
 
         return usuario;
     }
@@ -63,12 +66,16 @@ public class UsuarioCRUD implements CRUD<Usuario> {
     public void eliminar(String identificacion) {
         Usuario usuario = leer(identificacion);
         billetera.getUsuarios().remove(usuario);
+        ArchivoUtil.guardarRegistroLog(" Usuario Eliminado--> "+ " ID:" + usuario.getId()+ " - Nombre: " + usuario.getNombre() + " - Correo: "+ usuario.getCorreo() + " - Telefono: "+ usuario.getTelefono() + " - Dirección: "+ usuario.getDireccion() + " - Saldo Total: "+ usuario.getSaldoTotal(), 1, " btnEliminarUsuarios", "C:\\td\\persistencia\\log\\logCrudUsuario.txt");
         persistencia.guardarTodosLosUsuarios(billetera.getUsuarios());
+        
+        
     }
 
     @Override
     public Usuario leer(String identificacion) {
         return buscarUsuarioPorIdentificacion(identificacion)
                 .orElseThrow(() -> new IllegalArgumentException("El usuario no está registrado."));
+               
     }
 }

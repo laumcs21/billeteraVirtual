@@ -2,6 +2,7 @@ package uniquindio.edu.poo.billetera_model;
 
 import java.util.Optional;
 
+import uniquindio.edu.poo.billetera_archivo_util.ArchivoUtil;
 import uniquindio.edu.poo.billetera_persistencia.Persistencia_Categoria;
 import java.util.List;
 
@@ -37,6 +38,8 @@ public class CategoriaCRUD implements CRUD<Categoria> {
         eliminar(categoria.getId());
         billetera.getCategorias().add(categoria);
         persistencia.guardarTodasLasCategorias(billetera.getCategorias());
+        ArchivoUtil.guardarRegistroLog(" Categoria Actualizada--> "+ " ID:" + categoria.getId()+ " - Nombre: " + categoria.getNombre() + " - Descripción: "+ categoria.getDescripcion(), 1, " btnActualizarCategoria", "C:\\td\\persistencia\\log\\logCrudCategoria.txt");
+
     }
 
     @Override
@@ -47,6 +50,8 @@ public class CategoriaCRUD implements CRUD<Categoria> {
         billetera.getCategorias().add(categoria);
         persistencia.guardarTodasLasCategorias(billetera.getCategorias());
 
+        ArchivoUtil.guardarRegistroLog(" Categoria Creada--> "+ " ID:" + categoria.getId()+ " - Nombre: " + categoria.getNombre() + " - Descripción: "+ categoria.getDescripcion(), 1, " btnCrearCategoria", "C:\\td\\persistencia\\log\\logCrudCategoria.txt");
+
         return categoria;
     }
 
@@ -55,6 +60,9 @@ public class CategoriaCRUD implements CRUD<Categoria> {
         Categoria categoria = leer(identificacion);
         billetera.getCategorias().remove(categoria);
         persistencia.guardarTodasLasCategorias(billetera.getCategorias());
+
+        ArchivoUtil.guardarRegistroLog(" Categoria Eliminada--> "+ " ID:" + categoria.getId()+ " - Nombre: " + categoria.getNombre() + " - Descripción: "+ categoria.getDescripcion(), 1, " btnEliminarCategoria", "C:\\td\\persistencia\\log\\logCrudCategoria.txt");
+
     }
 
     @Override

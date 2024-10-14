@@ -25,6 +25,8 @@ public class Billetera_virtual {
     private CuentaCRUD cuentaCRUD;
     private TransaccionCRUD transaccionCRUD;
     private CategoriaCRUD categoriaCRUD;
+    private Thread hiloCopia;
+    private CopiaRespaldo copiaRespaldo;
 
     private Billetera_virtual() {
         this.usuarios = new LinkedList<>();
@@ -100,6 +102,18 @@ public class Billetera_virtual {
             }
         } catch (IOException e) {
             System.err.println("Error al cargar las cuentas desde el archivo: " + e.getMessage());
+        }
+    }
+
+    public void detenerHiloRespaldo() {
+        if (copiaRespaldo != null) {
+            copiaRespaldo.detener(); // Detener el hilo de respaldo
+            try {
+                hiloCopia.join(); // Esperar a que el hilo termine
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                e.printStackTrace();
+            }
         }
     }
 }

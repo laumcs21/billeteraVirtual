@@ -2,6 +2,7 @@ package uniquindio.edu.poo.billetera_model;
 
 import java.util.Optional;
 
+import uniquindio.edu.poo.billetera_archivo_util.ArchivoUtil;
 import uniquindio.edu.poo.billetera_persistencia.Persistencia_Cuenta;
 import java.util.List;
 
@@ -39,6 +40,7 @@ public class CuentaCRUD implements CRUD<Cuenta> {
         eliminar(cuenta.getId());
         billetera.getCuentas().add(cuenta);
         persistencia.guardarTodasLasCuentas(billetera.getCuentas());
+        ArchivoUtil.guardarRegistroLog(" Cuenta Actualizada--> "+ " ID Usuario:" + cuenta.getIdUsuario()+ " - ID: " + cuenta.getId() + " - Nombre Banco: "+ cuenta.getNombreBanco() + " - Número Cuenta: "+ cuenta.getNumeroCuenta() + " - Tipo de Cuenta: "+ cuenta.getTipoCuenta() + " - Saldo: "+ cuenta.getSaldo(), 1, " btnActualizarCuenta", "C:\\td\\persistencia\\log\\logCrudCuenta.txt");
     }
 
     @Override
@@ -49,6 +51,8 @@ public class CuentaCRUD implements CRUD<Cuenta> {
         billetera.getCuentas().add(cuenta);
         persistencia.guardarTodasLasCuentas(billetera.getCuentas());
 
+        ArchivoUtil.guardarRegistroLog(" Cuenta Creada--> "+ " ID Usuario:" + cuenta.getIdUsuario()+ " - ID: " + cuenta.getId() + " - Nombre Banco: "+ cuenta.getNombreBanco() + " - Número Cuenta: "+ cuenta.getNumeroCuenta() + " - Tipo de Cuenta: "+ cuenta.getTipoCuenta() + " - Saldo: "+ cuenta.getSaldo(), 1, " btnCrearCuenta", "C:\\td\\persistencia\\log\\logCrudCuenta.txt");
+
         return cuenta;
     }
 
@@ -57,6 +61,7 @@ public class CuentaCRUD implements CRUD<Cuenta> {
         Cuenta cuenta = leer(identificacion);
         billetera.getCuentas().remove(cuenta);
         persistencia.guardarTodasLasCuentas(billetera.getCuentas());
+        ArchivoUtil.guardarRegistroLog(" Cuenta Eliminada--> "+ " ID Usuario:" + cuenta.getIdUsuario()+ " - ID: " + cuenta.getId() + " - Nombre Banco: "+ cuenta.getNombreBanco() + " - Número Cuenta: "+ cuenta.getNumeroCuenta() + " - Tipo de Cuenta: "+ cuenta.getTipoCuenta() + " - Saldo: "+ cuenta.getSaldo(), 1, " btnEliminarCuenta", "C:\\td\\persistencia\\log\\logCrudCuenta.txt");
     }
 
     @Override

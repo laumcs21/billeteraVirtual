@@ -2,6 +2,7 @@ module uniquindio.edu.poo {
     requires javafx.controls;
     requires javafx.fxml;
     requires lombok;
+    requires java.logging;
 
     // Abrir paquetes para la reflexión de JavaFX (por ejemplo, para FXML)
     opens uniquindio.edu.poo.billetera_app to javafx.fxml;

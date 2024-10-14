@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import uniquindio.edu.poo.billetera_app.App;
+import uniquindio.edu.poo.billetera_archivo_util.ArchivoUtil;
 import uniquindio.edu.poo.billetera_model.Administrador;
 import uniquindio.edu.poo.billetera_model.Billetera_virtual;
 import uniquindio.edu.poo.billetera_model.Sesion;
@@ -72,6 +73,8 @@ public class InicioSesionController {
         if (admin.getId().equals(identificacion) && admin.getContraseña().equals(contraseña)) {
             Sesion.setEsAdmin(true);
             App.setRoot("Administrador", "Administrador");
+            ArchivoUtil.guardarRegistroLog(" Inicio de Sesión Administrador --> ID: " + admin.getId() + " - Nombre: " + admin.getNombre() + " - Correo: " + admin.getCorreo() + " - Telefono: " + admin.getTelefono() + " - Dirección: " + admin.getDireccion(), 
+                1, "btnIniciarSesion", "C:\\td\\persistencia\\log\\logInicioSesion.txt");
         } else {
             try {
                 Usuario usuario = billeteraVirtual.getUsuarioCRUD().leer(identificacion);
@@ -79,6 +82,7 @@ public class InicioSesionController {
                     Sesion.setEsAdmin(false);
                     Sesion.setIdUsuario(usuario.getId());
                     App.setRoot("Usuario", "Usuario");
+                    ArchivoUtil.guardarRegistroLog(" Inicio de Sesión Usuario --> ID: " + usuario.getId() + " - Nombre: " + usuario.getNombre() + " - Correo: " + usuario.getCorreo() + " - Telefono: " + usuario.getTelefono() + " - Dirección: " + usuario.getDireccion(),1, "btnIniciarSesion", "C:\\td\\persistencia\\log\\logInicioSesion.txt");
                 } else {
                     mensajeLabel.setVisible(true);
                     mensajeLabel.setText("Credenciales incorrectas.");

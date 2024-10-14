@@ -23,6 +23,7 @@ public class Persistencia_usuario {
 
     public void guardarTodosLosUsuarios(List<Usuario> usuarios) {
         StringBuilder textoUsuario = new StringBuilder();
+    
 
         for (Usuario usuario : usuarios) {
             textoUsuario.append(usuario.getId()).append("@@");
@@ -32,6 +33,8 @@ public class Persistencia_usuario {
             textoUsuario.append(usuario.getTelefono()).append("@@");
             textoUsuario.append(usuario.getDireccion()).append("@@");
             textoUsuario.append(usuario.getSaldoTotal()).append("\n");
+
+            
         }
 
         try {
@@ -39,6 +42,8 @@ public class Persistencia_usuario {
         } catch (IOException e) {
             System.err.println("Error al guardar los usuarios: " + e.getMessage());
         }
+       
+        
     }
 
     public List<Usuario> cargarUsuarios() throws IOException {

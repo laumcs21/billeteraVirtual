@@ -5,6 +5,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import uniquindio.edu.poo.billetera_model.Billetera_virtual;
+
 import java.nio.file.Paths;
 import java.nio.file.Path;
 
@@ -19,6 +21,9 @@ public class App extends Application {
         scene = new Scene(loadFXML("InicioSesion"), 640, 480);
         stage.setScene(scene);
         stage.setTitle("Inicio de Sesión");
+        stage.setOnCloseRequest(event -> {
+            Billetera_virtual.getInstancia().detenerHiloRespaldo();
+        });
         stage.show();
     }
 
