@@ -1,8 +1,9 @@
 package uniquindio.edu.poo.billetera_model;
 
+
 import java.util.List;
 
-public class BuscarUsuarioPorID {
+public class BuscarUsuarioPorID  {
 
     private static Billetera_virtual billeteraVirtual;
 

@@ -1,6 +1,7 @@
 package uniquindio.edu.poo.billetera_model;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -11,9 +12,10 @@ import uniquindio.edu.poo.billetera_persistencia.Persistencia_Cuenta;
 import uniquindio.edu.poo.billetera_persistencia.Persistencia_Transaccion;
 import uniquindio.edu.poo.billetera_persistencia.Persistencia_Categoria;
 
+
 @Getter
 @Setter
-public class Billetera_virtual {
+public class Billetera_virtual implements Serializable {
 
     private static Billetera_virtual instancia;
     private List<Usuario> usuarios;
@@ -27,6 +29,8 @@ public class Billetera_virtual {
     private CategoriaCRUD categoriaCRUD;
     private Thread hiloCopia;
     private CopiaRespaldo copiaRespaldo;
+   
+
 
     private Billetera_virtual() {
         this.usuarios = new LinkedList<>();
@@ -38,6 +42,10 @@ public class Billetera_virtual {
         this.cuentaCRUD = new CuentaCRUD(this);
         this.transaccionCRUD = new TransaccionCRUD(this);
         this.categoriaCRUD = new CategoriaCRUD(this);
+        this.copiaRespaldo = new CopiaRespaldo();
+        this.hiloCopia = new Thread(copiaRespaldo);
+        this.hiloCopia.start();
+     
     }
 
     public static Billetera_virtual getInstancia() {
@@ -88,28 +96,29 @@ public class Billetera_virtual {
                 this.transacciones.addAll(transaccionesCargadas);
             }
         } catch (IOException e) {
-            System.err.println("Error al cargar las cuentas desde el archivo: " + e.getMessage());
+            System.err.println("Error al cargar las transacciones desde el archivo: " + e.getMessage());
         }
     }
 
     private void cargarDatosCategorias() {
         Persistencia_Categoria persistencia = Persistencia_Categoria.getInstancia();
         try {
-            // this.categorias.clear();
             List<Categoria> categoriasCargadas = persistencia.cargarCategorias();
             if (categoriasCargadas != null) {
                 this.categorias.addAll(categoriasCargadas);
             }
         } catch (IOException e) {
-            System.err.println("Error al cargar las cuentas desde el archivo: " + e.getMessage());
+            System.err.println("Error al cargar las categorías desde el archivo: " + e.getMessage());
         }
     }
 
+   
+
     public void detenerHiloRespaldo() {
         if (copiaRespaldo != null) {
-            copiaRespaldo.detener(); // Detener el hilo de respaldo
+            copiaRespaldo.detener(); 
             try {
-                hiloCopia.join(); // Esperar a que el hilo termine
+                hiloCopia.join(); 
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 e.printStackTrace();

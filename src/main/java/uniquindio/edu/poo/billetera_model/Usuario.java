@@ -1,12 +1,14 @@
 package uniquindio.edu.poo.billetera_model;
 
+import java.io.Serializable;
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class Usuario extends Persona {
-
+public class Usuario extends Persona implements Serializable {
+    private static final long serialVersionUID = 1L;
     public double saldoTotal;
     private Billetera_virtual billeteraVirtual;
 
@@ -17,6 +19,10 @@ public class Usuario extends Persona {
         this.billeteraVirtual = Billetera_virtual.getInstancia();
     }
 
+    public static long getSerialversionuid() {
+        return serialVersionUID;
+    }
+
     public void actualizarSaldoTotal() {
         double nuevoSaldoTotal = billeteraVirtual.getCuentas().stream()
                 .filter(cuenta -> cuenta.getIdUsuario().equals(this.getId()))
@@ -24,6 +30,11 @@ public class Usuario extends Persona {
                 .sum();
 
         this.saldoTotal = nuevoSaldoTotal;
+    }
+
+    @Override
+    public String toString() {
+        return "Usuario [saldoTotal=" + saldoTotal + ", billeteraVirtual=" + billeteraVirtual + "]";
     }
 
 }

@@ -1,6 +1,8 @@
 package uniquindio.edu.poo.billetera_model;
 
-public class Sesion {
+
+
+public class Sesion{
     private static boolean esAdmin;
     private static String idUsuario;
 

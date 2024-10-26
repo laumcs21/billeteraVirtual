@@ -1,9 +1,10 @@
 package uniquindio.edu.poo.billetera_model;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Random;
 
-public class GeneradorNumeroCuenta {
+public class GeneradorNumeroCuenta implements Serializable {
 
     public static String generarNumeroUnico(int longitud, List<Cuenta> cuentasExistentes) {
         String caracteres = "0123456789";

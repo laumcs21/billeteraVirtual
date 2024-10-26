@@ -5,9 +5,11 @@ import java.util.Optional;
 import uniquindio.edu.poo.billetera_archivo_util.ArchivoUtil;
 import uniquindio.edu.poo.billetera_exception.CorreoElectronicoException;
 import uniquindio.edu.poo.billetera_persistencia.Persistencia_usuario;
+
+import java.io.Serializable;
 import java.util.List;
 
-public class UsuarioCRUD implements CRUD<Usuario> {
+public class UsuarioCRUD implements CRUD<Usuario>, Serializable {
 
     private Billetera_virtual billetera;
     private Persistencia_usuario persistencia = new Persistencia_usuario();
@@ -42,6 +44,8 @@ public class UsuarioCRUD implements CRUD<Usuario> {
         eliminar(usuario.getId());
         billetera.getUsuarios().add(usuario);
         persistencia.guardarTodosLosUsuarios(billetera.getUsuarios());
+        persistencia.guardarUsuariosEnXML(usuario);
+        persistencia.guardarUsuariosBinario(usuario);
         ArchivoUtil.guardarRegistroLog(" Usuario Actualizado--> "+ " ID:" + usuario.getId()+ " - Nombre: " + usuario.getNombre() + " - Correo: "+ usuario.getCorreo() + " - Telefono: "+ usuario.getTelefono() + " - Dirección: "+ usuario.getDireccion() + " - Saldo Total: "+ usuario.getSaldoTotal(), 1, " btnActualizarUsuarios", "C:\\td\\persistencia\\log\\logCrudUsuario.txt");
     }
 

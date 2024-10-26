@@ -13,6 +13,8 @@ import java.util.ArrayList;
 
 public class Persistencia_Transaccion {
     private static final String RUTA_ARCHIVO = "C:\\td\\persistencia\\archivos\\transacciones.txt";
+    private static final String RUTA_ARCHIVOXML = "C:\\td\\persistencia\\Transacciones.data";
+    private static final String RUTA_ARCHIVOBIN = "C:\\td\\persistencia\\TransaccionesBinario.data\\";
     private static Persistencia_Transaccion instancia;
 
     public static Persistencia_Transaccion getInstancia() {
@@ -115,4 +117,64 @@ public class Persistencia_Transaccion {
 
         return transacciones;
     }
+     public List<Transaccion> cargarTransaccionesXML() {
+        try {
+            return (List<Transaccion>) ArchivoUtil.cargarRecursoSerializadoXML(RUTA_ARCHIVOXML);
+        } catch (IOException e) {
+            System.err.println("Error al cargar las Transacciones desde el archivo XML: " + e.getMessage());
+            return new ArrayList<>();
+        } catch (ClassCastException e) {
+            System.err.println(
+                    "Error de conversión al cargar las Transacciones desde el archivo XML: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    public void guardarTransaccionesEnXML(Transaccion transaccion) {
+        try {
+            List<Transaccion> transacciones = cargarTransaccionesXML();
+
+            if (transacciones == null) {
+                transacciones = new ArrayList<>();
+            }
+
+            transacciones.add(transaccion);
+
+            ArchivoUtil.salvarRecursoSerializadoXML(RUTA_ARCHIVOXML, transacciones);
+        } catch (IOException e) {
+            System.out.println("Error al guardar la transaccion: " + e.getMessage());
+        }
+    }
+
+    public void guardarTransaccionesBinario(Transaccion transaccion) {
+        try {
+
+
+  
+            List<Transaccion> transacciones = cargarTransaccionesBinario();
+
+            if (transacciones == null) {
+                transacciones = new ArrayList<>();
+            }
+
+            transacciones.add(transaccion);
+
+            ArchivoUtil.salvarRecursoSerializado(RUTA_ARCHIVOBIN, transacciones);
+            System.out.println("Registro guardado en binario: " + transaccion);
+
+        } catch (Exception e) {
+            System.out.println("Error al guardar las transacciones en binario: " + e.getMessage());
+        }
+    }
+
+    private List<Transaccion> cargarTransaccionesBinario() {
+        try {
+            return (List<Transaccion>) ArchivoUtil.cargarRecursoSerializado(RUTA_ARCHIVOBIN);
+        } catch (Exception e) {
+            System.out.println("Error al cargar las transacciones desde binario: " + e.getMessage());
+            return null;
+        }
+    }
 }
+
+

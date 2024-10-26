@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+
 public class CopiaRespaldo implements Runnable {
     private static final String ORIGEN = "C:\\td\\persistencia\\archivos\\transacciones.txt";
     private static final String DESTINO_CARPETA = "C:\\td\\persistencia\\respaldo\\";

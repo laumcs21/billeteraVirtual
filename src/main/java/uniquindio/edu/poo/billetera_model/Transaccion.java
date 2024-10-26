@@ -1,5 +1,6 @@
 package uniquindio.edu.poo.billetera_model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 import lombok.Getter;
@@ -8,8 +9,10 @@ import lombok.Setter;
 @Getter
 @Setter
 
-public class Transaccion {
+public class Transaccion implements Serializable{
 
+
+    private static final long serialVersionUID = 1L;
     private String idUsuario;
     private String id;
     private LocalDate fecha;
@@ -72,6 +75,9 @@ public class Transaccion {
         public Transaccion build() {
             return new Transaccion(this);
         }
+    }
+    public static long getSerialversionuid() {
+        return serialVersionUID;
     }
 
     public String getNombreCategoria() {

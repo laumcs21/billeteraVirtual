@@ -9,6 +9,8 @@ import java.util.ArrayList;
 public class Persistencia_Categoria {
 
     private static final String RUTA_ARCHIVO = "C:\\td\\persistencia\\archivos\\categorias.txt";
+    private static final String RUTA_ARCHIVOXML = "C:\\td\\persistencia\\categorias.data";
+    private static final String RUTA_ARCHIVOBIN = "C:\\td\\persistencia\\categoriasBinario.data\\";
     private static Persistencia_Categoria instancia;
 
     public static Persistencia_Categoria getInstancia() {
@@ -61,4 +63,63 @@ public class Persistencia_Categoria {
         }
         return categorias;
     }
+    public List<Categoria> cargarCategoriasXML() {
+        try {
+            return (List<Categoria>) ArchivoUtil.cargarRecursoSerializadoXML(RUTA_ARCHIVOXML);
+        } catch (IOException e) {
+            System.err.println("Error al cargar las categorias desde el archivo XML: " + e.getMessage());
+            return new ArrayList<>();
+        } catch (ClassCastException e) {
+            System.err.println(
+                    "Error de conversión al cargar las categorias desde el archivo XML: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    public void guardarCategoriaEnXML(Categoria categoria) {
+        try {
+            List<Categoria> categorias = cargarCategoriasXML();
+
+            if (categorias == null) {
+                categorias = new ArrayList<>();
+            }
+
+            categorias.add(categoria);
+
+            ArchivoUtil.salvarRecursoSerializadoXML(RUTA_ARCHIVOXML, categorias);
+        } catch (IOException e) {
+            System.out.println("Error al guardar la categoria: " + e.getMessage());
+        }
+    }
+
+    public void guardarCategoriaBinario(Categoria categoria) {
+        try {
+
+
+  
+            List<Categoria> categorias = cargarCategoriasBinario();
+
+            if (categorias == null) {
+                categorias = new ArrayList<>();
+            }
+
+            categorias.add(categoria);
+
+            ArchivoUtil.salvarRecursoSerializado(RUTA_ARCHIVOBIN, categorias);
+            System.out.println("Registro guardado en binario: " + categoria);
+
+        } catch (Exception e) {
+            System.out.println("Error al guardar las categorias en binario: " + e.getMessage());
+        }
+    }
+
+    private List<Categoria> cargarCategoriasBinario() {
+        try {
+            return (List<Categoria>) ArchivoUtil.cargarRecursoSerializado(RUTA_ARCHIVOBIN);
+        } catch (Exception e) {
+            System.out.println("Error al cargar las categorias desde binario: " + e.getMessage());
+            return null;
+        }
+    }
 }
+

@@ -1,12 +1,14 @@
 package uniquindio.edu.poo.billetera_model;
 
+import java.io.Serializable;
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class Presupuesto {
-
+public class Presupuesto implements Serializable {
+    private static final long serialVersionUID = 1L;
     private Usuario usuario;
     private String id;
     private String nombre;

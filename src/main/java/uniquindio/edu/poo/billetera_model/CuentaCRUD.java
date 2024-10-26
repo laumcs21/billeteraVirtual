@@ -4,9 +4,11 @@ import java.util.Optional;
 
 import uniquindio.edu.poo.billetera_archivo_util.ArchivoUtil;
 import uniquindio.edu.poo.billetera_persistencia.Persistencia_Cuenta;
+
+import java.io.Serializable;
 import java.util.List;
 
-public class CuentaCRUD implements CRUD<Cuenta> {
+public class CuentaCRUD implements CRUD<Cuenta>, Serializable {
     private Billetera_virtual billetera;
     private Persistencia_Cuenta persistencia = new Persistencia_Cuenta();
 
@@ -40,6 +42,8 @@ public class CuentaCRUD implements CRUD<Cuenta> {
         eliminar(cuenta.getId());
         billetera.getCuentas().add(cuenta);
         persistencia.guardarTodasLasCuentas(billetera.getCuentas());
+        persistencia.guardarCuentaEnXML(cuenta);
+        persistencia.guardarCuentaBinario(cuenta);
         ArchivoUtil.guardarRegistroLog(" Cuenta Actualizada--> "+ " ID Usuario:" + cuenta.getIdUsuario()+ " - ID: " + cuenta.getId() + " - Nombre Banco: "+ cuenta.getNombreBanco() + " - Número Cuenta: "+ cuenta.getNumeroCuenta() + " - Tipo de Cuenta: "+ cuenta.getTipoCuenta() + " - Saldo: "+ cuenta.getSaldo(), 1, " btnActualizarCuenta", "C:\\td\\persistencia\\log\\logCrudCuenta.txt");
     }
 
@@ -50,6 +54,8 @@ public class CuentaCRUD implements CRUD<Cuenta> {
         }
         billetera.getCuentas().add(cuenta);
         persistencia.guardarTodasLasCuentas(billetera.getCuentas());
+        persistencia.guardarCuentaEnXML(cuenta);
+        persistencia.guardarCuentaBinario(cuenta);
 
         ArchivoUtil.guardarRegistroLog(" Cuenta Creada--> "+ " ID Usuario:" + cuenta.getIdUsuario()+ " - ID: " + cuenta.getId() + " - Nombre Banco: "+ cuenta.getNombreBanco() + " - Número Cuenta: "+ cuenta.getNumeroCuenta() + " - Tipo de Cuenta: "+ cuenta.getTipoCuenta() + " - Saldo: "+ cuenta.getSaldo(), 1, " btnCrearCuenta", "C:\\td\\persistencia\\log\\logCrudCuenta.txt");
 
@@ -61,7 +67,10 @@ public class CuentaCRUD implements CRUD<Cuenta> {
         Cuenta cuenta = leer(identificacion);
         billetera.getCuentas().remove(cuenta);
         persistencia.guardarTodasLasCuentas(billetera.getCuentas());
+        persistencia.guardarCuentaEnXML(cuenta);
+        persistencia.guardarCuentaBinario(cuenta);
         ArchivoUtil.guardarRegistroLog(" Cuenta Eliminada--> "+ " ID Usuario:" + cuenta.getIdUsuario()+ " - ID: " + cuenta.getId() + " - Nombre Banco: "+ cuenta.getNombreBanco() + " - Número Cuenta: "+ cuenta.getNumeroCuenta() + " - Tipo de Cuenta: "+ cuenta.getTipoCuenta() + " - Saldo: "+ cuenta.getSaldo(), 1, " btnEliminarCuenta", "C:\\td\\persistencia\\log\\logCrudCuenta.txt");
+    
     }
 
     @Override
