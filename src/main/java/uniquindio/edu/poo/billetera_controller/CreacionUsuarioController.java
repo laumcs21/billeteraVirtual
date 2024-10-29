@@ -27,9 +27,6 @@ public class CreacionUsuarioController {
     private TextField direccionField;
 
     @FXML
-    private TextField saldoInicialField;
-
-    @FXML
     private TextField ContraseñaField;
 
     @FXML
@@ -49,11 +46,10 @@ public class CreacionUsuarioController {
         correoField.setPromptText("Correo");
         telefonoField.setPromptText("Telefono");
         direccionField.setPromptText("Dirección");
-        saldoInicialField.setPromptText("Saldo inicial");
         ContraseñaField.setPromptText("Contraseña");
 
         TextField[] fields = { identificacionField, nombreField, correoField, telefonoField,
-                direccionField, saldoInicialField, ContraseñaField };
+                direccionField, ContraseñaField };
 
         for (TextField field : fields) {
             field.setOnMouseClicked(event -> limpiarCampoTexto(field));
@@ -76,11 +72,10 @@ public class CreacionUsuarioController {
         String correo = correoField.getText();
         String telefono = telefonoField.getText();
         String direccion = direccionField.getText();
-        String saldoInicialText = saldoInicialField.getText();
         String contraseña = ContraseñaField.getText();
 
         if (identificacion.isEmpty() || nombre.isEmpty() || correo.isEmpty() || telefono.isEmpty()
-                || direccion.isEmpty() || saldoInicialText.isEmpty() || contraseña.isEmpty()) {
+                || direccion.isEmpty() || contraseña.isEmpty()) {
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("Por favor, complete todos los campos.");
             mensajeLabel.setStyle("-fx-text-fill: red;");
@@ -88,10 +83,9 @@ public class CreacionUsuarioController {
         }
 
         try {
-            double saldoInicial = Double.parseDouble(saldoInicialText);
 
             Usuario usuario = new Usuario(identificacion, contraseña, nombre, correo, telefono, direccion,
-                    saldoInicial);
+                    0);
 
             billeteraVirtual.getUsuarioCRUD().crear(usuario);
             mensajeLabel.setVisible(true);

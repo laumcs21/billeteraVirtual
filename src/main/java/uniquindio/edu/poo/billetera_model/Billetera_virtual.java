@@ -11,7 +11,7 @@ import uniquindio.edu.poo.billetera_persistencia.Persistencia_usuario;
 import uniquindio.edu.poo.billetera_persistencia.Persistencia_Cuenta;
 import uniquindio.edu.poo.billetera_persistencia.Persistencia_Transaccion;
 import uniquindio.edu.poo.billetera_persistencia.Persistencia_Categoria;
-
+import uniquindio.edu.poo.billetera_persistencia.Persistencia_Presupuesto;
 
 @Getter
 @Setter
@@ -22,30 +22,29 @@ public class Billetera_virtual implements Serializable {
     private List<Cuenta> cuentas;
     private List<Transaccion> transacciones;
     private List<Categoria> categorias;
-    private List<Presupuesto> presupuesto;
+    private List<Presupuesto> presupuestos;
     private UsuarioCRUD usuarioCRUD;
     private CuentaCRUD cuentaCRUD;
     private TransaccionCRUD transaccionCRUD;
     private CategoriaCRUD categoriaCRUD;
+    private PresupuestoCRUD presupuestoCRUD;
     private Thread hiloCopia;
     private CopiaRespaldo copiaRespaldo;
-   
-
 
     private Billetera_virtual() {
         this.usuarios = new LinkedList<>();
         this.cuentas = new LinkedList<>();
         this.transacciones = new LinkedList<>();
-        this.presupuesto = new LinkedList<>();
+        this.presupuestos = new LinkedList<>();
         this.categorias = new LinkedList<>();
         this.usuarioCRUD = new UsuarioCRUD(this);
         this.cuentaCRUD = new CuentaCRUD(this);
         this.transaccionCRUD = new TransaccionCRUD(this);
         this.categoriaCRUD = new CategoriaCRUD(this);
+        this.presupuestoCRUD = new PresupuestoCRUD(this);
         this.copiaRespaldo = new CopiaRespaldo();
         this.hiloCopia = new Thread(copiaRespaldo);
-        this.hiloCopia.start();
-     
+        // this.hiloCopia.start();
     }
 
     public static Billetera_virtual getInstancia() {
@@ -57,6 +56,7 @@ public class Billetera_virtual implements Serializable {
                     instancia.cargarDatosCuentas();
                     instancia.cargarDatosTransacciones();
                     instancia.cargarDatosCategorias();
+                    instancia.cargarDatosPresupuestos();
                 }
             }
         }
@@ -112,13 +112,23 @@ public class Billetera_virtual implements Serializable {
         }
     }
 
-   
+    private void cargarDatosPresupuestos() {
+        Persistencia_Presupuesto persistencia = Persistencia_Presupuesto.getInstancia();
+        try {
+            List<Presupuesto> presupuestosCargados = persistencia.cargarPresupuestos();
+            if (presupuestosCargados != null) {
+                this.presupuestos.addAll(presupuestosCargados);
+            }
+        } catch (IOException e) {
+            System.err.println("Error al cargar los presupuestos desde el archivo: " + e.getMessage());
+        }
+    }
 
     public void detenerHiloRespaldo() {
         if (copiaRespaldo != null) {
-            copiaRespaldo.detener(); 
+            copiaRespaldo.detener();
             try {
-                hiloCopia.join(); 
+                hiloCopia.join();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 e.printStackTrace();

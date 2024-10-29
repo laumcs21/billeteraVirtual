@@ -41,7 +41,7 @@ public class UsuarioController {
 
     @FXML
     private void Presupuesto() throws IOException {
-        App.setRoot("ActualizacionUsuario", "Actualización Usuario");
+        App.setRoot("GestionPresupuestos", "Gestion Presupuestos");
     }
 
     @FXML
