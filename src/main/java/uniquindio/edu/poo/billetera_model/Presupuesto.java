@@ -12,7 +12,7 @@ public class Presupuesto {
     private String nombre;
     private double monto;
     private String idCategoria;
-    private String montoGastado;
+    private double montoGastado;
 
     public Presupuesto(String idUsuario, String id, String nombre, double monto, String idCategoria) {
         this.idUsuario = idUsuario;
@@ -20,6 +20,7 @@ public class Presupuesto {
         this.nombre = nombre;
         this.monto = monto;
         this.idCategoria = idCategoria;
+        this.montoGastado = 0;
     }
 
 }

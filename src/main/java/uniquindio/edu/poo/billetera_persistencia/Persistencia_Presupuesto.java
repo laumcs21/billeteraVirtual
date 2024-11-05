@@ -73,7 +73,7 @@ public class Persistencia_Presupuesto {
                         Double.parseDouble(split[3]),
                         split[4]);
 
-                presupuesto.setMontoGastado(split[5]);
+                presupuesto.setMontoGastado(Double.parseDouble(split[5]));
 
                 presupuestos.add(presupuesto);
 

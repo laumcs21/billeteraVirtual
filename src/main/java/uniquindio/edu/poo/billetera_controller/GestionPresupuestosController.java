@@ -12,6 +12,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import uniquindio.edu.poo.billetera_app.App;
 import uniquindio.edu.poo.billetera_model.Billetera_virtual;
+import uniquindio.edu.poo.billetera_model.BuscarCategoria;
+import uniquindio.edu.poo.billetera_model.Categoria;
 import uniquindio.edu.poo.billetera_model.Presupuesto;
 import uniquindio.edu.poo.billetera_model.Sesion;
 
@@ -49,7 +51,16 @@ public class GestionPresupuestosController {
         NombreField.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         MontoField.setCellValueFactory(new PropertyValueFactory<>("monto"));
         MontoGastadoField.setCellValueFactory(new PropertyValueFactory<>("montoGastado"));
-        CategoriaField.setCellValueFactory(new PropertyValueFactory<>("idCategoria"));
+
+        CategoriaField.setCellValueFactory(cellData -> {
+            Presupuesto presupuesto = cellData.getValue();
+            String idCategoria = presupuesto.getIdCategoria();
+
+            Categoria categoria = BuscarCategoria.buscarCategoriaPorID(idCategoria);
+            String nombreCategoria = (categoria != null) ? categoria.getNombre() : "Categoría desconocida";
+
+            return new javafx.beans.property.SimpleStringProperty(nombreCategoria);
+        });
     }
 
     @FXML

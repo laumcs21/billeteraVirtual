@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import uniquindio.edu.poo.billetera_app.App;
+import uniquindio.edu.poo.billetera_exception.ContrasenaException;
 import uniquindio.edu.poo.billetera_exception.CorreoElectronicoException;
 import uniquindio.edu.poo.billetera_model.Billetera_virtual;
 import uniquindio.edu.poo.billetera_model.Usuario;
@@ -107,6 +108,9 @@ public class RegistroController {
         } catch (CorreoElectronicoException e) {
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("El correo electrónico no es válido");
+        } catch (ContrasenaException e) {
+            mensajeLabel.setVisible(true);
+            mensajeLabel.setText("La contraseña debe contener mínimo una letra y un número");
         } catch (Exception e) {
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("Error al crear el usuario");

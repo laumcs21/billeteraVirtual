@@ -7,13 +7,13 @@ import javafx.scene.control.Label;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import uniquindio.edu.poo.billetera_app.App;
 import uniquindio.edu.poo.billetera_model.Billetera_virtual;
 import uniquindio.edu.poo.billetera_model.Cuenta;
 import uniquindio.edu.poo.billetera_model.GenerarCodigoTransaccion;
+import uniquindio.edu.poo.billetera_model.Presupuesto;
 import uniquindio.edu.poo.billetera_model.Sesion;
 import uniquindio.edu.poo.billetera_model.TipoTransaccion;
 import uniquindio.edu.poo.billetera_model.Transaccion;
@@ -21,6 +21,9 @@ import uniquindio.edu.poo.billetera_model.Usuario;
 import uniquindio.edu.poo.billetera_model.BuscarUsuarioPorID;
 import uniquindio.edu.poo.billetera_model.Categoria;
 import uniquindio.edu.poo.billetera_model.BuscarCuenta;
+import uniquindio.edu.poo.billetera_model.BuscarPresupuesto;
+import uniquindio.edu.poo.billetera_exception.MontoInvalidoException;
+import uniquindio.edu.poo.billetera_exception.SaldoInsuficienteException;
 
 public class CreacionTransaccionesController {
 
@@ -131,8 +134,15 @@ public class CreacionTransaccionesController {
         // Verifica si el monto es un número válido
         try {
             monto = Double.parseDouble(montoField.getText());
+            if (monto <= 0) {
+                throw new MontoInvalidoException("El monto debe ser un valor positivo.");
+            }
         } catch (NumberFormatException e) {
             mensajeLabel.setText("Monto inválido.");
+            mensajeLabel.setVisible(true);
+            return;
+        } catch (MontoInvalidoException e) {
+            mensajeLabel.setText(e.getMessage());
             mensajeLabel.setVisible(true);
             return;
         }
@@ -155,18 +165,50 @@ public class CreacionTransaccionesController {
             return;
         }
 
-        // Verificar saldo suficiente
         Cuenta cuentaOrigen = BuscarCuenta.buscarCuentaPorNumero(numeroCuentaOrigen);
-        if (tipo == TipoTransaccion.RETIRO || tipo == TipoTransaccion.TRANSFERENCIA) {
-            if (cuentaOrigen.getSaldo() < monto) {
-                mensajeLabel.setText("Saldo insuficiente para realizar la operación.");
+        try {
+            if (tipo == TipoTransaccion.RETIRO || tipo == TipoTransaccion.TRANSFERENCIA) {
+                if (cuentaOrigen.getSaldo() < monto) {
+                    throw new SaldoInsuficienteException("Saldo insuficiente para realizar la operación.");
+                }
+            }
+
+        } catch (SaldoInsuficienteException e) {
+            mensajeLabel.setText(e.getMessage());
+            mensajeLabel.setVisible(true);
+            return;
+        }
+
+        // Obtener el código de la categoría seleccionada y verificar presupuesto
+        Optional<Categoria> categoriaOpt = billeteraVirtual.getCategorias().stream()
+                .filter(categoria -> categoria.getNombre().equals(categoriaSeleccionada))
+                .findFirst();
+
+        if (!categoriaOpt.isPresent()) {
+            mensajeLabel.setText("La categoría seleccionada no es válida.");
+            mensajeLabel.setVisible(true);
+            return;
+        }
+
+        String codigoCategoria = categoriaOpt.get().getId();
+
+        Optional<Presupuesto> presupuestoOpt = BuscarPresupuesto.buscarPresupuestoPorCodigoCategoria(codigoCategoria);
+        if (presupuestoOpt.isPresent()) {
+            Presupuesto presupuesto = presupuestoOpt.get();
+            double montoGastadoNuevo = presupuesto.getMontoGastado() + monto;
+
+            if (montoGastadoNuevo > presupuesto.getMonto()) {
+                mensajeLabel
+                        .setText("La transacción excede el presupuesto establecido. No se realizará la transacción.");
+                mensajeLabel.setStyle("-fx-text-fill: red;");
                 mensajeLabel.setVisible(true);
                 return;
             }
+
+            presupuesto.setMontoGastado(montoGastadoNuevo);
         }
 
-        // Si el tipo de transacción es TRANSFERENCIA, verificar la cuenta
-        // destino
+        // Si el tipo de transacción es TRANSFERENCIA, verificar la cuenta destino
         if (tipo == TipoTransaccion.TRANSFERENCIA) {
             if (numeroCuentaDestino == null || numeroCuentaDestino.isEmpty()) {
                 mensajeLabel.setText("Por favor, ingrese el número de cuenta destino.");
@@ -186,31 +228,6 @@ public class CreacionTransaccionesController {
             }
         }
 
-        // Obtener el código de la categoría seleccionada
-        Optional<Categoria> categoriaOpt = billeteraVirtual.getCategorias().stream()
-                .filter(categoria -> categoria.getNombre().equals(categoriaSeleccionada))
-                .findFirst();
-
-        if (!categoriaOpt.isPresent()) {
-            mensajeLabel.setText("La categoría seleccionada no es válida.");
-            mensajeLabel.setVisible(true);
-            return;
-        }
-
-        String codigoCategoria = categoriaOpt.get().getId();
-
-        // Si es un administrador, verificar que el usuario exista
-        if (Sesion.getEsAdmin()) {
-            Optional<Usuario> usuarioOpt = billeteraVirtual.getUsuarios().stream()
-                    .filter(usuario -> usuario.getId().equals(idUsuario))
-                    .findFirst();
-
-            if (!usuarioOpt.isPresent()) {
-                mensajeLabel.setText("El usuario especificado no existe.");
-                mensajeLabel.setVisible(true);
-                return;
-            }
-        }
         List<Transaccion> transaccionesExistentes = billeteraVirtual.getTransacciones();
         String idTransaccionUnico = GenerarCodigoTransaccion.generarCodigoUnico(5, transaccionesExistentes);
 
@@ -229,6 +246,7 @@ public class CreacionTransaccionesController {
         mensajeLabel.setText("Transacción creada con éxito.");
         mensajeLabel.setVisible(true);
 
+        // Actualizar saldos y presupuesto si es necesario
         if (tipo == TipoTransaccion.DEPOSITO) {
             Cuenta cuenta = BuscarCuenta.buscarCuentaPorNumero(numeroCuentaOrigen);
             double saldoNuevo = cuenta.getSaldo() + monto;
@@ -266,7 +284,6 @@ public class CreacionTransaccionesController {
             Usuario usuarioDestino = BuscarUsuarioPorID.buscarUsuarioPorIdentificacion(idUsuarioDestino);
             usuarioDestino.actualizarSaldoTotal();
             billeteraVirtual.getUsuarioCRUD().actualizar(usuarioDestino);
-
         }
     }
 

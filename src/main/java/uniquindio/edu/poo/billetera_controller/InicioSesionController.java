@@ -1,6 +1,10 @@
 package uniquindio.edu.poo.billetera_controller;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.Socket;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -57,8 +61,7 @@ public class InicioSesionController {
     }
 
     @FXML
-    private void IniciarSesion() throws IOException {
-
+    private void IniciarSesion() {
         String identificacion = identificacionField.getText().trim();
         String contraseña = contraseñaField.getText().trim();
 
@@ -69,28 +72,58 @@ public class InicioSesionController {
             return;
         }
 
-        Administrador admin = Administrador.getInstance();
-        if (admin.getId().equals(identificacion) && admin.getContraseña().equals(contraseña)) {
-            Sesion.setEsAdmin(true);
-            App.setRoot("Administrador", "Administrador");
-            ArchivoUtil.guardarRegistroLog(" Inicio de Sesión Administrador --> ID: " + admin.getId() + " - Nombre: " + admin.getNombre() + " - Correo: " + admin.getCorreo() + " - Telefono: " + admin.getTelefono() + " - Dirección: " + admin.getDireccion(), 
-                1, "btnIniciarSesion", "C:\\td\\persistencia\\log\\logInicioSesion.txt");
-        } else {
-            try {
-                Usuario usuario = billeteraVirtual.getUsuarioCRUD().leer(identificacion);
-                if (usuario.getContraseña().equals(contraseña)) {
+        try (Socket socket = new Socket("localhost", 9091);
+                DataOutputStream flujoSalida = new DataOutputStream(socket.getOutputStream());
+                DataInputStream flujoEntrada = new DataInputStream(socket.getInputStream())) {
+
+            // Enviar las credenciales al servidor
+            flujoSalida.writeUTF(identificacion);
+            flujoSalida.writeUTF(contraseña);
+
+            // Leer la respuesta del servidor
+            String respuesta = flujoEntrada.readUTF();
+
+            switch (respuesta) {
+                case "ACCESO_CONCEDIDO_ADMINISTRADOR":
+                    Sesion.setEsAdmin(true);
+                    Sesion.setIdUsuario(identificacion);
+                    App.setRoot("Administrador", "Administrador");
+                    ArchivoUtil.guardarRegistroLog("Inicio de Sesión Administrador --> ID: " + identificacion, 1,
+                            "btnIniciarSesion", "C:\\td\\persistencia\\log\\logInicioSesion.txt");
+                    break;
+
+                case "ACCESO_CONCEDIDO_USUARIO":
                     Sesion.setEsAdmin(false);
-                    Sesion.setIdUsuario(usuario.getId());
+                    Sesion.setIdUsuario(identificacion);
                     App.setRoot("Usuario", "Usuario");
-                    ArchivoUtil.guardarRegistroLog(" Inicio de Sesión Usuario --> ID: " + usuario.getId() + " - Nombre: " + usuario.getNombre() + " - Correo: " + usuario.getCorreo() + " - Telefono: " + usuario.getTelefono() + " - Dirección: " + usuario.getDireccion(),1, "btnIniciarSesion", "C:\\td\\persistencia\\log\\logInicioSesion.txt");
-                } else {
+                    ArchivoUtil.guardarRegistroLog("Inicio de Sesión Usuario --> ID: " + identificacion, 1,
+                            "btnIniciarSesion", "C:\\td\\persistencia\\log\\logInicioSesion.txt");
+                    break;
+
+                case "ACCESO_DENEGADO":
                     mensajeLabel.setVisible(true);
                     mensajeLabel.setText("Credenciales incorrectas.");
-                }
-            } catch (IllegalArgumentException e) {
-                mensajeLabel.setVisible(true);
-                mensajeLabel.setText("El usuario no está registrado.");
+                    mensajeLabel.setStyle("-fx-text-fill: red;");
+                    break;
+
+                case "USUARIO_NO_REGISTRADO":
+                    mensajeLabel.setVisible(true);
+                    mensajeLabel.setText("El usuario no está registrado.");
+                    mensajeLabel.setStyle("-fx-text-fill: red;");
+                    break;
+
+                default:
+                    mensajeLabel.setVisible(true);
+                    mensajeLabel.setText("Respuesta desconocida del servidor.");
+                    mensajeLabel.setStyle("-fx-text-fill: red;");
+                    break;
             }
+
+        } catch (IOException e) {
+            mensajeLabel.setVisible(true);
+            mensajeLabel.setText("Error de conexión con el servidor.");
+            mensajeLabel.setStyle("-fx-text-fill: red;");
+            e.printStackTrace();
         }
     }
 

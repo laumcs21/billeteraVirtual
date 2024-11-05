@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import uniquindio.edu.poo.billetera_archivo_util.ArchivoUtil;
 import uniquindio.edu.poo.billetera_exception.CorreoElectronicoException;
+import uniquindio.edu.poo.billetera_exception.ContrasenaException;
 import uniquindio.edu.poo.billetera_persistencia.Persistencia_usuario;
 
 import java.io.Serializable;
@@ -35,8 +36,27 @@ public class UsuarioCRUD implements CRUD<Usuario>, Serializable {
         return buscarUsuarioRecursivo(usuarios, identificacion, indice + 1);
     }
 
-    public static boolean buscarCadena(String frase, String busqueda) {
-        return frase.contains(busqueda);
+    public static boolean esCorreoValido(String correo) {
+        String patronCorreo = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,}$";
+        return correo.matches(patronCorreo);
+    }
+
+    public static boolean esContrasenaValida(String contrasena) {
+        boolean tieneLetra = false;
+        boolean tieneNumero = false;
+
+        for (char c : contrasena.toCharArray()) {
+            if (Character.isLetter(c)) {
+                tieneLetra = true;
+            } else if (Character.isDigit(c)) {
+                tieneNumero = true;
+            }
+            if (tieneLetra && tieneNumero) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override
@@ -46,7 +66,11 @@ public class UsuarioCRUD implements CRUD<Usuario>, Serializable {
         persistencia.guardarTodosLosUsuarios(billetera.getUsuarios());
         persistencia.guardarUsuariosEnXML(usuario);
         persistencia.guardarUsuariosBinario(usuario);
-        ArchivoUtil.guardarRegistroLog(" Usuario Actualizado--> "+ " ID:" + usuario.getId()+ " - Nombre: " + usuario.getNombre() + " - Correo: "+ usuario.getCorreo() + " - Telefono: "+ usuario.getTelefono() + " - Dirección: "+ usuario.getDireccion() + " - Saldo Total: "+ usuario.getSaldoTotal(), 1, " btnActualizarUsuarios", "C:\\td\\persistencia\\log\\logCrudUsuario.txt");
+        ArchivoUtil.guardarRegistroLog(
+                " Usuario Actualizado--> " + " ID:" + usuario.getId() + " - Nombre: " + usuario.getNombre()
+                        + " - Correo: " + usuario.getCorreo() + " - Telefono: " + usuario.getTelefono()
+                        + " - Dirección: " + usuario.getDireccion() + " - Saldo Total: " + usuario.getSaldoTotal(),
+                1, " btnActualizarUsuarios", "C:\\td\\persistencia\\log\\logCrudUsuario.txt");
     }
 
     @Override
@@ -55,13 +79,21 @@ public class UsuarioCRUD implements CRUD<Usuario>, Serializable {
             throw new IllegalArgumentException("El usuario ya está registrado.");
         }
 
-        if (!buscarCadena(usuario.getCorreo(), "@") || !buscarCadena(usuario.getCorreo(), ".com")) {
+        if (!esCorreoValido(usuario.getCorreo())) {
             throw new CorreoElectronicoException("El correo no es válido");
+        }
+
+        if (!esContrasenaValida(usuario.getContraseña())) {
+            throw new ContrasenaException("La contraseña debe contener al menos un número y una letra");
         }
 
         billetera.getUsuarios().add(usuario);
         persistencia.guardarTodosLosUsuarios(billetera.getUsuarios());
-        ArchivoUtil.guardarRegistroLog(" Usuario Registrado--> "+ " ID:" + usuario.getId()+ " - Nombre: " + usuario.getNombre() + " - Correo: "+ usuario.getCorreo() + " - Telefono: "+ usuario.getTelefono() + " - Dirección: "+ usuario.getDireccion() + " - Saldo Total: "+ usuario.getSaldoTotal(), 1, " btnCrearUsuarios", "C:\\td\\persistencia\\log\\logCrudUsuario.txt");
+        ArchivoUtil.guardarRegistroLog(
+                " Usuario Registrado--> " + " ID:" + usuario.getId() + " - Nombre: " + usuario.getNombre()
+                        + " - Correo: " + usuario.getCorreo() + " - Telefono: " + usuario.getTelefono()
+                        + " - Dirección: " + usuario.getDireccion() + " - Saldo Total: " + usuario.getSaldoTotal(),
+                1, " btnCrearUsuarios", "C:\\td\\persistencia\\log\\logCrudUsuario.txt");
 
         return usuario;
     }
@@ -70,16 +102,19 @@ public class UsuarioCRUD implements CRUD<Usuario>, Serializable {
     public void eliminar(String identificacion) {
         Usuario usuario = leer(identificacion);
         billetera.getUsuarios().remove(usuario);
-        ArchivoUtil.guardarRegistroLog(" Usuario Eliminado--> "+ " ID:" + usuario.getId()+ " - Nombre: " + usuario.getNombre() + " - Correo: "+ usuario.getCorreo() + " - Telefono: "+ usuario.getTelefono() + " - Dirección: "+ usuario.getDireccion() + " - Saldo Total: "+ usuario.getSaldoTotal(), 1, " btnEliminarUsuarios", "C:\\td\\persistencia\\log\\logCrudUsuario.txt");
+        ArchivoUtil.guardarRegistroLog(
+                " Usuario Eliminado--> " + " ID:" + usuario.getId() + " - Nombre: " + usuario.getNombre()
+                        + " - Correo: " + usuario.getCorreo() + " - Telefono: " + usuario.getTelefono()
+                        + " - Dirección: " + usuario.getDireccion() + " - Saldo Total: " + usuario.getSaldoTotal(),
+                1, " btnEliminarUsuarios", "C:\\td\\persistencia\\log\\logCrudUsuario.txt");
         persistencia.guardarTodosLosUsuarios(billetera.getUsuarios());
-        
-        
+
     }
 
     @Override
     public Usuario leer(String identificacion) {
         return buscarUsuarioPorIdentificacion(identificacion)
                 .orElseThrow(() -> new IllegalArgumentException("El usuario no está registrado."));
-               
+
     }
 }
