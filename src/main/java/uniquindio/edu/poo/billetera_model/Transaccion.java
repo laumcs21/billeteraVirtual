@@ -9,8 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 
-public class Transaccion implements Serializable{
-
+public class Transaccion implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private String idUsuario;
@@ -23,7 +22,7 @@ public class Transaccion implements Serializable{
     private String numeroCuentaDestino;
     private String idCategoria;
 
-    private Transaccion(Builder builder) {
+    public Transaccion(Builder builder) {
         this.idUsuario = builder.idUsuario;
         this.id = builder.id;
         this.fecha = builder.fecha;
@@ -76,6 +75,7 @@ public class Transaccion implements Serializable{
             return new Transaccion(this);
         }
     }
+
     public static long getSerialversionuid() {
         return serialVersionUID;
     }

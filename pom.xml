@@ -9,9 +9,9 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        <javafx.version>22</javafx.version> <!-- Actualizar a JavaFX 22 -->
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <javafx.version>22</javafx.version> <!-- JavaFX versión 22 -->
     </properties>
 
     <dependencies>
@@ -27,19 +27,46 @@
             <version>${javafx.version}</version>
         </dependency>
 
+        <!-- Lombok para reducir el código repetitivo -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.24</version> <!-- Usa la última versión estable -->
+            <version>1.18.24</version>
             <scope>provided</scope>
         </dependency>
 
-        <!-- Dependencia opcional para compatibilidad con sistemas de archivos en Java 11+ -->
+        <!-- MapStruct para la generación automática de mappers -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>1.5.5.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>1.5.5.Final</version>
+            <scope>provided</scope>
+        </dependency>
+
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-context</artifactId>
+    <version>5.3.20</version>
+</dependency>
+
+        <!-- javax.annotation para compatibilidad con Java 9+ -->
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>1.3.2</version>
+        </dependency>
+
+        <!-- JavaFX base para compatibilidad en sistemas de archivos en Java 11+ -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-base</artifactId>
             <version>${javafx.version}</version>
-            <classifier>win</classifier>
+            <classifier>win</classifier> <!-- Cambiar según el sistema operativo -->
         </dependency>
     </dependencies>
 
@@ -51,7 +78,18 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
                 <configuration>
-                    <release>11</release> <!-- Java 11 -->
+                    <release>17</release>
+                    <compilerArgs>
+                        <arg>-Amapstruct.defaultComponentModel=spring</arg>
+                        <arg>-Amapstruct.verbose=true</arg>
+                    </compilerArgs>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>1.5.5.Final</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
 
@@ -64,15 +102,16 @@
                     <execution>
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>uniquindio.edu.poo.billetera_app.App</mainClass> <!-- Cambia según tu clase principal -->
+                            <mainClass>uniquindio.edu.poo.billetera_app.App</mainClass> <!-- Clase principal del proyecto -->
                         </configuration>
                     </execution>
                 </executions>
                 <configuration>
-                    <modulePaths>${java.home}/lib</modulePaths> <!-- Para que detecte los módulos -->
-                    <addModules>javafx.controls,javafx.fxml</addModules> <!-- Añade los módulos necesarios -->
+                    <addModules>javafx.controls,javafx.fxml</addModules>
                 </configuration>
             </plugin>
         </plugins>
     </build>
 </project>
+
+

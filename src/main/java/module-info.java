@@ -4,6 +4,10 @@ module uniquindio.edu.poo {
     requires lombok;
     requires java.logging;
     requires java.desktop;
+    requires org.mapstruct;
+    requires java.base;
+
+    exports uniquindio.edu.poo.mapping.mappers;
 
     // Abrir paquetes para la reflexión de JavaFX (por ejemplo, para FXML)
     opens uniquindio.edu.poo.billetera_app to javafx.fxml;
@@ -14,5 +18,5 @@ module uniquindio.edu.poo {
     exports uniquindio.edu.poo.billetera_app;
     exports uniquindio.edu.poo.billetera_controller;
     exports uniquindio.edu.poo.billetera_model;
-    
+
 }

@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import uniquindio.edu.poo.billetera_model.Billetera_virtual;
+import uniquindio.edu.poo.billetera_model.Servidor;
 
 import java.nio.file.Paths;
 import java.nio.file.Path;
@@ -40,6 +41,7 @@ public class App extends Application {
     }
 
     public static void main(String[] args) {
+        new Servidor();
         launch();
     }
 

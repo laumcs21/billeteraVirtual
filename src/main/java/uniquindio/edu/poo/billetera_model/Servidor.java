@@ -108,8 +108,4 @@ public class Servidor extends JFrame implements Runnable {
             }
         }
     }
-
-    public static void main(String[] args) {
-        new Servidor();
-    }
 }
