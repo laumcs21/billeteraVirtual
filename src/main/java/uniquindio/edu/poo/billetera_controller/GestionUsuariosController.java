@@ -8,36 +8,76 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import uniquindio.edu.poo.billetera_app.App;
 import uniquindio.edu.poo.billetera_model.Billetera_virtual;
-import uniquindio.edu.poo.billetera_model.Usuario;
+import uniquindio.edu.poo.mapping.dto.UsuarioDto;
+import uniquindio.edu.poo.mapping.mappers.BancoMapper;
 
 public class GestionUsuariosController {
 
     @FXML
-    private TableView<Usuario> tablaUsuarios;
+    private TableView<UsuarioDto> tablaUsuarios;
 
     @FXML
-    private TableColumn<Usuario, String> identificacionField;
+    private TableColumn<UsuarioDto, String> identificacionField;
 
     @FXML
-    private TableColumn<Usuario, String> nombreField;
+    private TableColumn<UsuarioDto, String> nombreField;
 
     @FXML
-    private TableColumn<Usuario, String> correoField;
+    private TableColumn<UsuarioDto, String> correoField;
 
     @FXML
-    private TableColumn<Usuario, String> telefonoField;
+    private TableColumn<UsuarioDto, String> telefonoField;
 
     @FXML
-    private TableColumn<Usuario, String> direccionField;
+    private TableColumn<UsuarioDto, String> direccionField;
 
     @FXML
-    private TableColumn<Usuario, Double> saldoActualField;
+    private TableColumn<UsuarioDto, Double> saldoActualField;
 
-    private ObservableList<Usuario> usuarios = FXCollections
-            .observableArrayList(Billetera_virtual.getInstancia().getUsuarios());
+    // Instancia del mapper para convertir entidades a DTOs
+    private BancoMapper mapper = BancoMapper.INSTANCE;
+
+    private ObservableList<UsuarioDto> usuarios = FXCollections.observableArrayList();
+
+    @FXML
+    private void initialize() {
+        DecimalFormat formatoDecimal = new DecimalFormat("#");
+
+        // Configuración personalizada para cada columna usando un Callback
+        identificacionField.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().id()));
+        nombreField.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().nombre()));
+        correoField.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().correo()));
+        telefonoField.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().telefono()));
+        direccionField.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().direccion()));
+
+        // Usar un formato especial para la columna saldoActualField
+        saldoActualField.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().saldoTotal()));
+        saldoActualField.setCellFactory(column -> {
+            return new TableCell<UsuarioDto, Double>() {
+                @Override
+                protected void updateItem(Double item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText(null);
+                    } else {
+                        setText(formatoDecimal.format(item));
+                    }
+                }
+            };
+        });
+        cargarUsuarios();
+    }
+
+    private void cargarUsuarios() {
+        // Mapear cada Usuario a UsuarioDto antes de agregarlo a la lista
+        Billetera_virtual.getInstancia().getUsuarios().stream()
+                .map(mapper::usuarioToUsuarioDto) // Conversión a DTO
+                .forEach(usuarios::add);
+        tablaUsuarios.setItems(usuarios);
+    }
 
     @FXML
     private void CrearUsuario() throws IOException {
@@ -57,36 +97,6 @@ public class GestionUsuariosController {
     @FXML
     private void BuscarUsuario() throws IOException {
         App.setRoot("LecturaUsuario", "Lectura Usuario");
-    }
-
-    @FXML
-    private void initialize() {
-        DecimalFormat formatoDecimal = new DecimalFormat("#");
-        identificacionField.setCellValueFactory(new PropertyValueFactory<>("id"));
-        nombreField.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-        correoField.setCellValueFactory(new PropertyValueFactory<>("correo"));
-        telefonoField.setCellValueFactory(new PropertyValueFactory<>("telefono"));
-        direccionField.setCellValueFactory(new PropertyValueFactory<>("direccion"));
-        saldoActualField.setCellValueFactory(new PropertyValueFactory<>("saldoTotal"));
-        saldoActualField.setCellFactory(column -> {
-            return new TableCell<Usuario, Double>() {
-                @Override
-                protected void updateItem(Double item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty || item == null) {
-                        setText(null);
-                    } else {
-                        setText(formatoDecimal.format(item));
-                    }
-                }
-            };
-        });
-    }
-
-    @FXML
-    private void mostrarUsuarios() throws IOException {
-
-        tablaUsuarios.setItems(usuarios);
     }
 
     @FXML

@@ -11,11 +11,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <javafx.version>22</javafx.version> <!-- JavaFX versión 22 -->
+        <javafx.version>22</javafx.version>
     </properties>
 
     <dependencies>
-        <!-- Dependencias JavaFX -->
+        <!-- JavaFX dependencies -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -26,8 +26,20 @@
             <artifactId>javafx-fxml</artifactId>
             <version>${javafx.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-base</artifactId>
+            <version>${javafx.version}</version>
+            <classifier>win</classifier> <!-- Cambiar según el sistema operativo: 'win', 'linux' o 'mac' -->
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>${javafx.version}</version>
+            <classifier>win</classifier>
+        </dependency>
 
-        <!-- Lombok para reducir el código repetitivo -->
+        <!-- Lombok for reducing boilerplate code -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -35,7 +47,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- MapStruct para la generación automática de mappers -->
+        <!-- MapStruct for automatic mapper generation -->
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
@@ -48,31 +60,17 @@
             <scope>provided</scope>
         </dependency>
 
-<dependency>
-    <groupId>org.springframework</groupId>
-    <artifactId>spring-context</artifactId>
-    <version>5.3.20</version>
-</dependency>
-
-        <!-- javax.annotation para compatibilidad con Java 9+ -->
+        <!-- javax.annotation for compatibility with Java 9+ -->
         <dependency>
             <groupId>javax.annotation</groupId>
             <artifactId>javax.annotation-api</artifactId>
             <version>1.3.2</version>
         </dependency>
-
-        <!-- JavaFX base para compatibilidad en sistemas de archivos en Java 11+ -->
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-base</artifactId>
-            <version>${javafx.version}</version>
-            <classifier>win</classifier> <!-- Cambiar según el sistema operativo -->
-        </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <!-- Plugin de compilación de Maven -->
+            <!-- Maven Compiler Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -80,7 +78,7 @@
                 <configuration>
                     <release>17</release>
                     <compilerArgs>
-                        <arg>-Amapstruct.defaultComponentModel=spring</arg>
+                        <arg>-Amapstruct.defaultComponentModel=default</arg>
                         <arg>-Amapstruct.verbose=true</arg>
                     </compilerArgs>
                     <annotationProcessorPaths>
@@ -93,25 +91,31 @@
                 </configuration>
             </plugin>
 
-            <!-- Plugin de JavaFX para ejecutar el proyecto -->
+            <!-- JavaFX Maven Plugin -->
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.6</version>
+                <version>0.0.8</version>
                 <executions>
                     <execution>
                         <id>default-cli</id>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
                         <configuration>
-                            <mainClass>uniquindio.edu.poo.billetera_app.App</mainClass> <!-- Clase principal del proyecto -->
+                            <mainClass>uniquindio.edu.poo.billetera_app.App</mainClass>
                         </configuration>
                     </execution>
                 </executions>
                 <configuration>
-                    <addModules>javafx.controls,javafx.fxml</addModules>
+                    <mainClass>uniquindio.edu.poo.billetera_app.App</mainClass>
+                    <addModules>javafx.controls,javafx.fxml,javafx.graphics,javafx.base</addModules>
                 </configuration>
             </plugin>
         </plugins>
     </build>
 </project>
+
+
 
 

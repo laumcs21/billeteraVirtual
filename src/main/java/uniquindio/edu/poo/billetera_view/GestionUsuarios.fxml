@@ -22,6 +22,5 @@
             <TableColumn fx:id="saldoActualField" prefWidth="72.33331298828125" text="Saldo" />
         </columns>
       </TableView>
-      <Button layoutX="73.0" layoutY="340.0" mnemonicParsing="false" onAction="#mostrarUsuarios" text="Mostrar Usuarios" />
    </children>
 </Pane>

@@ -9,6 +9,9 @@ import uniquindio.edu.poo.billetera_exception.ContrasenaException;
 import uniquindio.edu.poo.billetera_exception.CorreoElectronicoException;
 import uniquindio.edu.poo.billetera_model.Billetera_virtual;
 import uniquindio.edu.poo.billetera_model.Usuario;
+import uniquindio.edu.poo.billetera_model.UsuarioCRUD;
+import uniquindio.edu.poo.mapping.dto.UsuarioDto;
+import uniquindio.edu.poo.mapping.mappers.BancoMapper;
 
 public class CreacionUsuarioController {
 
@@ -34,6 +37,8 @@ public class CreacionUsuarioController {
     private Label mensajeLabel;
 
     private Billetera_virtual billeteraVirtual;
+
+    private BancoMapper bancoMapper = BancoMapper.INSTANCE;
 
     public CreacionUsuarioController() {
         this.billeteraVirtual = Billetera_virtual.getInstancia();
@@ -83,29 +88,37 @@ public class CreacionUsuarioController {
             return;
         }
 
-        try {
+        // Validación de correo y contraseña
+        if (!UsuarioCRUD.esCorreoValido(correo)) {
+            mensajeLabel.setVisible(true);
+            mensajeLabel.setText("El correo electrónico no es válido");
+            return;
+        }
 
-            Usuario usuario = new Usuario(identificacion, contraseña, nombre, correo, telefono, direccion,
-                    0);
+        if (!UsuarioCRUD.esContrasenaValida(contraseña)) {
+            mensajeLabel.setVisible(true);
+            mensajeLabel.setText("La contraseña debe contener mínimo una letra y un número");
+            return;
+        }
+
+        try {
+            // Crear UsuarioDto y mapearlo a Usuario
+            UsuarioDto usuarioDto = new UsuarioDto(identificacion, nombre, correo, telefono, direccion, contraseña,
+                    0.0);
+            Usuario usuario = bancoMapper.usuarioDtoToUsuario(usuarioDto);
 
             billeteraVirtual.getUsuarioCRUD().crear(usuario);
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("Usuario creado exitosamente.");
-        } catch (NumberFormatException e) {
-            mensajeLabel.setVisible(true);
-            mensajeLabel.setText("Saldo inicial debe ser un número válido.");
+            mensajeLabel.setStyle("-fx-text-fill: green;");
         } catch (IllegalArgumentException e) {
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("El usuario ya está registrado.");
-        } catch (CorreoElectronicoException e) {
-            mensajeLabel.setVisible(true);
-            mensajeLabel.setText("El correo electrónico no es válido");
-        } catch (ContrasenaException e) {
-            mensajeLabel.setVisible(true);
-            mensajeLabel.setText("La contraseña debe contener mínimo una letra y un número");
+            mensajeLabel.setStyle("-fx-text-fill: red;");
         } catch (Exception e) {
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("Error al crear el usuario");
+            mensajeLabel.setStyle("-fx-text-fill: red;");
         }
     }
 

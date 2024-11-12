@@ -8,6 +8,8 @@ import uniquindio.edu.poo.billetera_app.App;
 import uniquindio.edu.poo.billetera_model.Billetera_virtual;
 import uniquindio.edu.poo.billetera_model.Usuario;
 import uniquindio.edu.poo.billetera_model.Sesion;
+import uniquindio.edu.poo.mapping.dto.UsuarioDto;
+import uniquindio.edu.poo.mapping.mappers.BancoMapper;
 
 public class ActualizacionUsuarioController {
 
@@ -35,6 +37,8 @@ public class ActualizacionUsuarioController {
     private Billetera_virtual billeteraVirtual;
 
     private Usuario usuarioEncontrado;
+
+    private BancoMapper bancoMapper = BancoMapper.INSTANCE;
 
     public ActualizacionUsuarioController() {
         this.billeteraVirtual = Billetera_virtual.getInstancia();
@@ -81,7 +85,9 @@ public class ActualizacionUsuarioController {
         try {
             usuarioEncontrado = billeteraVirtual.getUsuarioCRUD().leer(identificacion);
             if (usuarioEncontrado != null) {
-                llenarCamposConUsuario(usuarioEncontrado);
+                // Convertir el Usuario a UsuarioDto para llenar los campos
+                UsuarioDto usuarioDto = bancoMapper.usuarioToUsuarioDto(usuarioEncontrado);
+                llenarCamposConUsuarioDto(usuarioDto);
                 mensajeLabel.setVisible(false);
             } else {
                 mensajeLabel.setVisible(true);
@@ -95,12 +101,12 @@ public class ActualizacionUsuarioController {
         }
     }
 
-    private void llenarCamposConUsuario(Usuario usuario) {
-        nombreField.setText(usuario.getNombre());
-        correoField.setText(usuario.getCorreo());
-        telefonoField.setText(usuario.getTelefono());
-        direccionField.setText(usuario.getDireccion());
-        ContraseñaField.setText(usuario.getContraseña());
+    private void llenarCamposConUsuarioDto(UsuarioDto usuarioDto) {
+        nombreField.setText(usuarioDto.nombre());
+        correoField.setText(usuarioDto.correo());
+        telefonoField.setText(usuarioDto.telefono());
+        direccionField.setText(usuarioDto.direccion());
+        ContraseñaField.setText(usuarioDto.contraseña());
     }
 
     @FXML
@@ -112,14 +118,21 @@ public class ActualizacionUsuarioController {
             return;
         }
 
-        usuarioEncontrado.setNombre(nombreField.getText());
-        usuarioEncontrado.setCorreo(correoField.getText());
-        usuarioEncontrado.setTelefono(telefonoField.getText());
-        usuarioEncontrado.setDireccion(direccionField.getText());
-        usuarioEncontrado.setContraseña(ContraseñaField.getText());
+        // Crear un UsuarioDto con los datos actualizados
+        UsuarioDto usuarioDtoActualizado = new UsuarioDto(
+                identificacionField.getText(),
+                nombreField.getText(),
+                correoField.getText(),
+                telefonoField.getText(),
+                direccionField.getText(),
+                ContraseñaField.getText(),
+                usuarioEncontrado.getSaldoTotal());
+
+        // Mapear el UsuarioDto actualizado a un Usuario
+        Usuario usuarioActualizado = bancoMapper.usuarioDtoToUsuario(usuarioDtoActualizado);
 
         try {
-            billeteraVirtual.getUsuarioCRUD().actualizar(usuarioEncontrado);
+            billeteraVirtual.getUsuarioCRUD().actualizar(usuarioActualizado);
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("Usuario actualizado exitosamente.");
             mensajeLabel.setStyle("-fx-text-fill: green;");

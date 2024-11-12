@@ -6,11 +6,14 @@ import javafx.scene.control.TextArea;
 import uniquindio.edu.poo.billetera_app.App;
 import uniquindio.edu.poo.billetera_model.Sesion;
 import uniquindio.edu.poo.billetera_model.Usuario;
+import uniquindio.edu.poo.mapping.dto.UsuarioDto;
+import uniquindio.edu.poo.mapping.mappers.BancoMapper;
 import uniquindio.edu.poo.billetera_model.BuscarUsuarioPorID;
 
 public class UsuarioController {
 
     private String idUsuario = Sesion.getIdUsuario();
+    private BancoMapper bancoMapper = BancoMapper.INSTANCE;
 
     @FXML
     private TextArea saldoField;
@@ -19,9 +22,14 @@ public class UsuarioController {
     public void initialize() {
 
         Usuario usuario = BuscarUsuarioPorID.buscarUsuarioPorIdentificacion(idUsuario);
-        double saldo = usuario.getSaldoTotal();
 
-        saldoField.setText(String.format("%.2f", saldo));
+        if (usuario != null) {
+            UsuarioDto usuarioDto = bancoMapper.usuarioToUsuarioDto(usuario);
+            double saldo = usuarioDto.saldoTotal();
+            saldoField.setText(String.format("%.2f", saldo));
+        } else {
+            saldoField.setText("Usuario no encontrado");
+        }
     }
 
     @FXML

@@ -1,7 +1,6 @@
 package uniquindio.edu.poo.mapping.mappers;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import uniquindio.edu.poo.billetera_model.Usuario;
@@ -16,7 +15,7 @@ import uniquindio.edu.poo.mapping.dto.PresupuestoDto;
 import uniquindio.edu.poo.mapping.dto.CuentaDto;
 import uniquindio.edu.poo.mapping.dto.CategoriaDto;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "default")
 public interface BancoMapper {
     BancoMapper INSTANCE = Mappers.getMapper(BancoMapper.class);
 
@@ -25,8 +24,7 @@ public interface BancoMapper {
 
     Usuario usuarioDtoToUsuario(UsuarioDto usuarioDto);
 
-    // Mapping Transaccion -> TransaccionDto
-    @Mapping(target = "tipo", source = "tipo")
+    // Mapping Transaccion -> TransaccionDto (sin anotaciones adicionales)
     TransaccionDto transaccionToTransaccionDto(Transaccion transaccion);
 
     Transaccion transaccionDtoToTransaccion(TransaccionDto transaccionDto);
@@ -36,8 +34,7 @@ public interface BancoMapper {
 
     Presupuesto presupuestoDtoToPresupuesto(PresupuestoDto presupuestoDto);
 
-    // Mapping Cuenta -> CuentaDto
-    @Mapping(target = "tipoCuenta", source = "tipoCuenta")
+    // Mapping Cuenta -> CuentaDto (sin anotaciones adicionales)
     CuentaDto cuentaToCuentaDto(Cuenta cuenta);
 
     Cuenta cuentaDtoToCuenta(CuentaDto cuentaDto);

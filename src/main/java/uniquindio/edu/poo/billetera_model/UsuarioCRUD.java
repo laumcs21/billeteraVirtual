@@ -37,7 +37,7 @@ public class UsuarioCRUD implements CRUD<Usuario>, Serializable {
     }
 
     public static boolean esCorreoValido(String correo) {
-        String patronCorreo = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,}$";
+        String patronCorreo = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
         return correo.matches(patronCorreo);
     }
 
@@ -74,17 +74,9 @@ public class UsuarioCRUD implements CRUD<Usuario>, Serializable {
     }
 
     @Override
-    public Usuario crear(Usuario usuario) throws CorreoElectronicoException {
+    public Usuario crear(Usuario usuario) {
         if (buscarUsuarioPorIdentificacion(usuario.getId()).isPresent()) {
             throw new IllegalArgumentException("El usuario ya está registrado.");
-        }
-
-        if (!esCorreoValido(usuario.getCorreo())) {
-            throw new CorreoElectronicoException("El correo no es válido");
-        }
-
-        if (!esContrasenaValida(usuario.getContraseña())) {
-            throw new ContrasenaException("La contraseña debe contener al menos un número y una letra");
         }
 
         billetera.getUsuarios().add(usuario);
