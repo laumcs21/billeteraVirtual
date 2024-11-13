@@ -12,27 +12,30 @@ import uniquindio.edu.poo.billetera_model.Billetera_virtual;
 import uniquindio.edu.poo.billetera_model.BuscarCategoria;
 import uniquindio.edu.poo.billetera_model.Categoria;
 import uniquindio.edu.poo.billetera_model.Presupuesto;
+import uniquindio.edu.poo.mapping.dto.PresupuestoDto;
+import uniquindio.edu.poo.mapping.mappers.BancoMapper;
 
 public class ActualizacionPresupuestoController {
 
     @FXML
-    private TextField IdField;
+    private TextField idField;
 
     @FXML
-    private TextField NombreField;
+    private TextField nombreField;
 
     @FXML
-    private TextField MontoField;
+    private TextField montoField;
 
     @FXML
-    private ComboBox<String> Categoria;
+    private ComboBox<String> categoriaComboBox;
 
     @FXML
     private Label mensajeLabel;
 
-    private Presupuesto presupuestoEncontrado;
+    private PresupuestoDto presupuestoEncontradoDto;
 
     private Billetera_virtual billeteraVirtual;
+    private BancoMapper bancoMapper = BancoMapper.INSTANCE;
 
     public ActualizacionPresupuestoController() {
         this.billeteraVirtual = Billetera_virtual.getInstancia();
@@ -41,13 +44,13 @@ public class ActualizacionPresupuestoController {
     @FXML
     public void initialize() {
         mensajeLabel.setVisible(false);
-        IdField.setPromptText("ID Presupuesto");
-        NombreField.setPromptText("Nombre");
-        MontoField.setPromptText("Monto");
+        idField.setPromptText("ID Presupuesto");
+        nombreField.setPromptText("Nombre");
+        montoField.setPromptText("Monto");
 
-        billeteraVirtual.getCategorias().forEach(categoria -> Categoria.getItems().add(categoria.getNombre()));
+        billeteraVirtual.getCategorias().forEach(categoria -> categoriaComboBox.getItems().add(categoria.getNombre()));
 
-        TextField[] fields = { IdField, NombreField, MontoField };
+        TextField[] fields = { idField, nombreField, montoField };
         for (TextField field : fields) {
             field.setOnMouseClicked(event -> limpiarCampoTexto(field));
             field.focusedProperty().addListener((observable, oldValue, newValue) -> {
@@ -64,7 +67,7 @@ public class ActualizacionPresupuestoController {
 
     @FXML
     private void Buscar() throws IOException {
-        String idPresupuesto = IdField.getText();
+        String idPresupuesto = idField.getText();
 
         if (idPresupuesto.isEmpty()) {
             mensajeLabel.setVisible(true);
@@ -74,9 +77,10 @@ public class ActualizacionPresupuestoController {
         }
 
         try {
-            presupuestoEncontrado = billeteraVirtual.getPresupuestoCRUD().leer(idPresupuesto);
-            if (presupuestoEncontrado != null) {
-                llenarCamposConPresupuesto(presupuestoEncontrado);
+            Presupuesto presupuesto = billeteraVirtual.getPresupuestoCRUD().leer(idPresupuesto);
+            if (presupuesto != null) {
+                presupuestoEncontradoDto = bancoMapper.presupuestoToPresupuestoDto(presupuesto);
+                llenarCamposConPresupuesto(presupuestoEncontradoDto);
                 mensajeLabel.setVisible(false);
             } else {
                 mensajeLabel.setVisible(true);
@@ -90,15 +94,16 @@ public class ActualizacionPresupuestoController {
         }
     }
 
-    private void llenarCamposConPresupuesto(Presupuesto presupuesto) {
-        NombreField.setText(presupuesto.getNombre());
-        MontoField.setText(String.valueOf(presupuesto.getMonto()));
-        Categoria.setValue(BuscarCategoria.buscarCategoriaPorID(presupuesto.getIdCategoria()).getNombre());
+    private void llenarCamposConPresupuesto(PresupuestoDto presupuestoDto) {
+        nombreField.setText(presupuestoDto.nombre());
+        montoField.setText(String.valueOf(presupuestoDto.monto()));
+        Categoria categoria = BuscarCategoria.buscarCategoriaPorID(presupuestoDto.idCategoria());
+        categoriaComboBox.setValue(categoria != null ? categoria.getNombre() : "");
     }
 
     @FXML
     private void Actualizar() throws IOException {
-        if (presupuestoEncontrado == null) {
+        if (presupuestoEncontradoDto == null) {
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("Primero debe buscar un presupuesto.");
             mensajeLabel.setStyle("-fx-text-fill: red;");
@@ -106,26 +111,32 @@ public class ActualizacionPresupuestoController {
         }
 
         try {
-            // Actualizar los campos del presupuesto
-            presupuestoEncontrado.setNombre(NombreField.getText());
-            presupuestoEncontrado.setMonto(Double.parseDouble(MontoField.getText()));
+            String nombre = nombreField.getText();
+            double monto = Double.parseDouble(montoField.getText());
+            String categoriaSeleccionada = categoriaComboBox.getValue();
 
-            // Obtener la categoría seleccionada y su ID
-            String categoriaSeleccionada = Categoria.getValue();
             Optional<Categoria> categoriaOpt = billeteraVirtual.getCategorias().stream()
                     .filter(categoria -> categoria.getNombre().equals(categoriaSeleccionada))
                     .findFirst();
 
-            if (categoriaOpt.isPresent()) {
-                presupuestoEncontrado.setIdCategoria(categoriaOpt.get().getId());
-            } else {
+            if (categoriaOpt.isEmpty()) {
                 mensajeLabel.setVisible(true);
                 mensajeLabel.setText("Categoría seleccionada no válida.");
                 mensajeLabel.setStyle("-fx-text-fill: red;");
                 return;
             }
 
-            billeteraVirtual.getPresupuestoCRUD().actualizar(presupuestoEncontrado);
+            String idCategoria = categoriaOpt.get().getId();
+            PresupuestoDto actualizadoPresupuestoDto = new PresupuestoDto(
+                    presupuestoEncontradoDto.idUsuario(),
+                    presupuestoEncontradoDto.id(),
+                    nombre,
+                    monto,
+                    idCategoria,
+                    presupuestoEncontradoDto.montoGastado());
+
+            billeteraVirtual.getPresupuestoCRUD()
+                    .actualizar(bancoMapper.presupuestoDtoToPresupuesto(actualizadoPresupuestoDto));
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("Presupuesto actualizado exitosamente.");
             mensajeLabel.setStyle("-fx-text-fill: green;");

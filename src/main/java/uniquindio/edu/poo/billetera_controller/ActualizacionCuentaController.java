@@ -8,8 +8,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import uniquindio.edu.poo.billetera_app.App;
 import uniquindio.edu.poo.billetera_model.Billetera_virtual;
-import uniquindio.edu.poo.billetera_model.Cuenta;
 import uniquindio.edu.poo.billetera_model.TipoCuenta;
+import uniquindio.edu.poo.mapping.dto.CuentaDto;
+import uniquindio.edu.poo.mapping.mappers.BancoMapper;
 
 public class ActualizacionCuentaController {
 
@@ -29,7 +30,8 @@ public class ActualizacionCuentaController {
     private Label mensajeLabel;
 
     private Billetera_virtual billeteraVirtual;
-    private Cuenta cuentaEncontrada;
+    private BancoMapper bancoMapper = BancoMapper.INSTANCE;
+    private CuentaDto cuentaEncontradaDto;
 
     public ActualizacionCuentaController() {
         this.billeteraVirtual = Billetera_virtual.getInstancia();
@@ -42,9 +44,9 @@ public class ActualizacionCuentaController {
         nombreBancoField.setPromptText("Nombre Banco");
         IDusuarioField.setPromptText("ID usuario");
 
-        TextField[] fields = { IDcuentaField, nombreBancoField, IDusuarioField };
-
         tipoCuentaComboBox.getItems().setAll(TipoCuenta.values());
+
+        TextField[] fields = { IDcuentaField, nombreBancoField, IDusuarioField };
 
         for (TextField field : fields) {
             field.setOnMouseClicked(event -> limpiarCampoTexto(field));
@@ -64,16 +66,17 @@ public class ActualizacionCuentaController {
     private void Buscar() throws IOException {
         String id = IDcuentaField.getText();
 
-        if (id.isEmpty() || id == null) {
+        if (id.isEmpty()) {
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("Por favor, ingrese la identificación de la cuenta.");
             mensajeLabel.setStyle("-fx-text-fill: red;");
             return;
         }
         try {
-            cuentaEncontrada = billeteraVirtual.getCuentaCRUD().leer(id);
-            if (cuentaEncontrada != null) {
-                llenarCamposConCuenta(cuentaEncontrada);
+            var cuenta = billeteraVirtual.getCuentaCRUD().leer(id);
+            if (cuenta != null) {
+                cuentaEncontradaDto = bancoMapper.cuentaToCuentaDto(cuenta);
+                llenarCamposConCuenta(cuentaEncontradaDto);
                 mensajeLabel.setVisible(false);
             } else {
                 mensajeLabel.setVisible(true);
@@ -86,28 +89,31 @@ public class ActualizacionCuentaController {
         }
     }
 
-    private void llenarCamposConCuenta(Cuenta cuenta) {
-        nombreBancoField.setText(cuenta.getNombreBanco());
-        IDusuarioField.setText(cuenta.getIdUsuario());
-        tipoCuentaComboBox.setValue(cuenta.getTipoCuenta());
-
+    private void llenarCamposConCuenta(CuentaDto cuentaDto) {
+        nombreBancoField.setText(cuentaDto.nombreBanco());
+        IDusuarioField.setText(cuentaDto.idUsuario());
+        tipoCuentaComboBox.setValue(cuentaDto.tipoCuenta());
     }
 
     @FXML
     private void Actualizar() throws IOException {
-        if (cuentaEncontrada == null) {
+        if (cuentaEncontradaDto == null) {
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("Primero debe buscar una cuenta.");
             mensajeLabel.setStyle("-fx-text-fill: red;");
             return;
         }
 
-        cuentaEncontrada.setNombreBanco(nombreBancoField.getText());
-        cuentaEncontrada.setIdUsuario(IDusuarioField.getText());
-        cuentaEncontrada.setTipoCuenta(tipoCuentaComboBox.getValue());
+        cuentaEncontradaDto = new CuentaDto(
+                IDusuarioField.getText(),
+                cuentaEncontradaDto.id(),
+                nombreBancoField.getText(),
+                cuentaEncontradaDto.numeroCuenta(),
+                tipoCuentaComboBox.getValue(),
+                cuentaEncontradaDto.saldo());
 
         try {
-            billeteraVirtual.getCuentaCRUD().actualizar(cuentaEncontrada);
+            billeteraVirtual.getCuentaCRUD().actualizar(bancoMapper.cuentaDtoToCuenta(cuentaEncontradaDto));
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("Cuenta actualizada exitosamente.");
             mensajeLabel.setStyle("-fx-text-fill: green;");

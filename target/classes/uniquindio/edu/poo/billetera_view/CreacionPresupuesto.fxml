@@ -9,11 +9,11 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uniquindio.edu.poo.billetera_controller.CreacionPresupuestoController">
    <children>
-      <TextField fx:id="NombreField" layoutX="68.0" layoutY="62.0" opacity="0.48" text="Nombre" />
-      <TextField fx:id="MontoField" layoutX="68.0" layoutY="114.0" opacity="0.48" text="Monto" />
+      <TextField fx:id="nombreField" layoutX="68.0" layoutY="62.0" opacity="0.48" text="Nombre" />
+      <TextField fx:id="montoField" layoutX="68.0" layoutY="114.0" opacity="0.48" text="Monto" />
       <Button layoutX="68.0" layoutY="280.0" mnemonicParsing="false" onAction="#Crear" text="Crear" />
       <Button layoutX="479.0" layoutY="336.0" mnemonicParsing="false" onAction="#Volver" text="Volver" />
       <Label fx:id="mensajeLabel" layoutX="68.0" layoutY="319.0" prefHeight="17.0" prefWidth="306.0" text="Mensaje Aquí" />
-      <ComboBox fx:id="Categoria" layoutX="67.0" layoutY="167.0" prefWidth="150.0" promptText="Categoría" />
+      <ComboBox fx:id="categoriaComboBox" layoutX="67.0" layoutY="167.0" prefWidth="150.0" promptText="Categoría" />
    </children>
 </Pane>

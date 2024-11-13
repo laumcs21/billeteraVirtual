@@ -10,7 +10,6 @@
       <Button layoutX="117.0" layoutY="50.0" mnemonicParsing="false" onAction="#AgregarCuenta" text="Agregar Cuenta" />
       <Button layoutX="397.0" layoutY="50.0" mnemonicParsing="false" onAction="#ActualizarCuenta" text="Actualizar Cuenta" />
       <Button layoutX="117.0" layoutY="86.0" mnemonicParsing="false" onAction="#EliminarCuenta" text="Eliminar Cuenta" />
-      <Button layoutX="85.0" layoutY="373.0" mnemonicParsing="false" onAction="#mostrarCuentas" text="Mostrar Cuentas" />
       <Button layoutX="451.0" layoutY="373.0" mnemonicParsing="false" onAction="#Volver" text="Volver" />
       <TableView fx:id="tablaCuentas" layoutX="10.0" layoutY="138.0" prefHeight="216.0" prefWidth="600.0">
         <columns>

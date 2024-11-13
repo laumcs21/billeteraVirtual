@@ -10,39 +10,43 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+
 import uniquindio.edu.poo.billetera_app.App;
 import uniquindio.edu.poo.billetera_model.Billetera_virtual;
-import uniquindio.edu.poo.billetera_model.Cuenta;
 import uniquindio.edu.poo.billetera_model.Sesion;
 import uniquindio.edu.poo.billetera_model.Usuario;
+import uniquindio.edu.poo.mapping.dto.CuentaDto;
+import uniquindio.edu.poo.mapping.mappers.BancoMapper;
 
 public class BusquedaCuentasUsuarioController {
 
     @FXML
-    private TableView<Cuenta> tablaCuentas;
+    private TableView<CuentaDto> tablaCuentas;
 
     @FXML
-    private TableColumn<Cuenta, String> identificacionField;
+    private TableColumn<CuentaDto, String> identificacionField;
 
     @FXML
-    private TableColumn<Cuenta, String> codigoField;
+    private TableColumn<CuentaDto, String> codigoField;
 
     @FXML
-    private TableColumn<Cuenta, String> numeroField;
+    private TableColumn<CuentaDto, String> numeroField;
 
     @FXML
-    private TableColumn<Cuenta, String> bancoField;
+    private TableColumn<CuentaDto, String> bancoField;
 
     @FXML
-    private TableColumn<Cuenta, String> tipoField;
+    private TableColumn<CuentaDto, String> tipoField;
 
     @FXML
-    private TableColumn<Usuario, Double> saldoField;
+    private TableColumn<CuentaDto, Double> saldoField;
 
-    private static Billetera_virtual billeteraVirtual;
-    String idUsuario = Sesion.getIdUsuario();
-
-    private ObservableList<Cuenta> cuentas;
+    private Billetera_virtual billeteraVirtual;
+    private BancoMapper bancoMapper = BancoMapper.INSTANCE;
+    private String idUsuario = Sesion.getIdUsuario();
+    private ObservableList<CuentaDto> cuentas;
 
     public BusquedaCuentasUsuarioController() {
         this.billeteraVirtual = Billetera_virtual.getInstancia();
@@ -50,40 +54,31 @@ public class BusquedaCuentasUsuarioController {
 
     @FXML
     private void initialize() {
-        identificacionField.setCellValueFactory(new PropertyValueFactory<>("idUsuario"));
-        codigoField.setCellValueFactory(new PropertyValueFactory<>("id"));
-        numeroField.setCellValueFactory(new PropertyValueFactory<>("numeroCuenta"));
-        bancoField.setCellValueFactory(new PropertyValueFactory<>("nombreBanco"));
-        tipoField.setCellValueFactory(new PropertyValueFactory<>("tipoCuenta"));
-        saldoField.setCellValueFactory(new PropertyValueFactory<>("saldo"));
-        mostrarCuentas();
+        identificacionField
+                .setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().idUsuario()));
+        codigoField.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().id()));
+        numeroField.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().numeroCuenta()));
+        bancoField.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().nombreBanco()));
+        tipoField.setCellValueFactory(
+                cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().tipoCuenta().toString()));
+        saldoField.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().saldo()));
     }
 
-    public static Usuario buscarUsuarioPorIdentificacion(String identificacion) {
-        return buscarUsuarioRecursivo(billeteraVirtual.getUsuarios(), identificacion, 0);
-    }
-
-    private static Usuario buscarUsuarioRecursivo(List<Usuario> usuarios, String identificacion, int indice) {
-        if (indice >= usuarios.size()) {
-            return null;
-        }
-
-        Usuario usuario = usuarios.get(indice);
-        if (usuario.getId().equals(identificacion)) {
-            return usuario;
-        }
-
-        return buscarUsuarioRecursivo(usuarios, identificacion, indice + 1);
+    private Usuario buscarUsuarioPorIdentificacion(String identificacion) {
+        return billeteraVirtual.getUsuarios().stream()
+                .filter(usuario -> usuario.getId().equals(identificacion))
+                .findFirst()
+                .orElse(null);
     }
 
     @FXML
     private void mostrarCuentas() {
-
         Usuario usuario = buscarUsuarioPorIdentificacion(idUsuario);
 
         if (usuario != null) {
-            List<Cuenta> listaCuentas = billeteraVirtual.getCuentas().stream()
+            List<CuentaDto> listaCuentas = billeteraVirtual.getCuentas().stream()
                     .filter(cuenta -> cuenta.getIdUsuario().equals(usuario.getId()))
+                    .map(bancoMapper::cuentaToCuentaDto)
                     .collect(Collectors.toList());
 
             if (!listaCuentas.isEmpty()) {

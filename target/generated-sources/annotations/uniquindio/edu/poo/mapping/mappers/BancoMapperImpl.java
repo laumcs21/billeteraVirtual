@@ -65,7 +65,6 @@ public class BancoMapperImpl implements BancoMapper {
         if (transaccionDto == null) {
             return null;
         }
-        // Uso del Builder para construir la instancia de Transaccion
         Transaccion.Builder builder = new Transaccion.Builder(
                 transaccionDto.idUsuario(),
                 transaccionDto.id(),
@@ -97,7 +96,8 @@ public class BancoMapperImpl implements BancoMapper {
                 presupuesto.getId(),
                 presupuesto.getNombre(),
                 presupuesto.getMonto(),
-                presupuesto.getIdCategoria());
+                presupuesto.getIdCategoria(),
+                presupuesto.getMontoGastado());
     }
 
     @Override
@@ -105,12 +105,15 @@ public class BancoMapperImpl implements BancoMapper {
         if (presupuestoDto == null) {
             return null;
         }
-        return new Presupuesto(
+        Presupuesto presupuesto = new Presupuesto(
                 presupuestoDto.idUsuario(),
                 presupuestoDto.id(),
                 presupuestoDto.nombre(),
                 presupuestoDto.monto(),
                 presupuestoDto.idCategoria());
+
+        presupuesto.setMontoGastado(presupuestoDto.montoGastado());
+        return presupuesto;
     }
 
     @Override
@@ -157,7 +160,6 @@ public class BancoMapperImpl implements BancoMapper {
         if (categoriaDto == null) {
             return null;
         }
-        // Uso del Builder para construir la instancia de Categoria
         Categoria.Builder builder = new Categoria.Builder(
                 categoriaDto.id(),
                 categoriaDto.nombre());

@@ -2,7 +2,6 @@ package uniquindio.edu.poo.billetera_controller;
 
 import java.io.IOException;
 import java.util.Optional;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -12,25 +11,27 @@ import uniquindio.edu.poo.billetera_model.Billetera_virtual;
 import uniquindio.edu.poo.billetera_model.BuscarUsuarioPorID;
 import uniquindio.edu.poo.billetera_model.Categoria;
 import uniquindio.edu.poo.billetera_model.GeneradorCodigoPresupuesto;
-import uniquindio.edu.poo.billetera_model.Presupuesto;
 import uniquindio.edu.poo.billetera_model.Sesion;
 import uniquindio.edu.poo.billetera_model.Usuario;
+import uniquindio.edu.poo.mapping.dto.PresupuestoDto;
+import uniquindio.edu.poo.mapping.mappers.BancoMapper;
 
 public class CreacionPresupuestoController {
 
     @FXML
-    private TextField NombreField;
+    private TextField nombreField;
 
     @FXML
-    private TextField MontoField;
+    private TextField montoField;
 
     @FXML
-    private ComboBox<String> Categoria;
+    private ComboBox<String> categoriaComboBox;
 
     @FXML
     private Label mensajeLabel;
 
     private Billetera_virtual billeteraVirtual;
+    private BancoMapper bancoMapper = BancoMapper.INSTANCE;
 
     public CreacionPresupuestoController() {
         this.billeteraVirtual = Billetera_virtual.getInstancia();
@@ -39,13 +40,13 @@ public class CreacionPresupuestoController {
     @FXML
     public void initialize() {
         mensajeLabel.setVisible(false);
-        NombreField.setPromptText("Nombre del Presupuesto");
-        MontoField.setPromptText("Monto");
+        nombreField.setPromptText("Nombre del Presupuesto");
+        montoField.setPromptText("Monto");
 
-        billeteraVirtual.getCategorias().forEach(categoria -> Categoria.getItems().add(categoria.getNombre()));
+        billeteraVirtual.getCategorias().forEach(categoria -> categoriaComboBox.getItems().add(categoria.getNombre()));
 
-        NombreField.setOnMouseClicked(event -> limpiarCampoTexto(NombreField));
-        MontoField.setOnMouseClicked(event -> limpiarCampoTexto(MontoField));
+        nombreField.setOnMouseClicked(event -> limpiarCampoTexto(nombreField));
+        montoField.setOnMouseClicked(event -> limpiarCampoTexto(montoField));
     }
 
     private void limpiarCampoTexto(TextField campoTexto) {
@@ -55,18 +56,18 @@ public class CreacionPresupuestoController {
     @FXML
     private void Crear() throws IOException {
         String idUsuario = Sesion.getIdUsuario();
-        String nombre = NombreField.getText();
-        String categoriaSeleccionada = Categoria.getValue();
+        String nombre = nombreField.getText();
+        String categoriaSeleccionada = categoriaComboBox.getValue();
         double monto;
 
-        if (nombre.isEmpty() || MontoField.getText().isEmpty() || categoriaSeleccionada == null) {
+        if (nombre.isEmpty() || montoField.getText().isEmpty() || categoriaSeleccionada == null) {
             mensajeLabel.setText("Por favor, complete todos los campos obligatorios.");
             mensajeLabel.setVisible(true);
             return;
         }
 
         try {
-            monto = Double.parseDouble(MontoField.getText());
+            monto = Double.parseDouble(montoField.getText());
         } catch (NumberFormatException e) {
             mensajeLabel.setText("Monto inválido.");
             mensajeLabel.setVisible(true);
@@ -88,9 +89,11 @@ public class CreacionPresupuestoController {
         String idPresupuestoUnico = GeneradorCodigoPresupuesto.generarCodigoUnico(5,
                 billeteraVirtual.getPresupuestos());
 
-        Presupuesto nuevoPresupuesto = new Presupuesto(idUsuario, idPresupuestoUnico, nombre, monto, codigoCategoria);
+        PresupuestoDto nuevoPresupuestoDto = new PresupuestoDto(idUsuario, idPresupuestoUnico, nombre, monto,
+                codigoCategoria, 0.0);
 
-        billeteraVirtual.getPresupuestoCRUD().crear(nuevoPresupuesto);
+        billeteraVirtual.getPresupuestoCRUD().crear(bancoMapper.presupuestoDtoToPresupuesto(nuevoPresupuestoDto));
+
         mensajeLabel.setText("Presupuesto creado con éxito.");
         mensajeLabel.setVisible(true);
 

@@ -1,66 +1,97 @@
 package uniquindio.edu.poo.billetera_controller;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.TableCell;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleStringProperty;
 import uniquindio.edu.poo.billetera_app.App;
 import uniquindio.edu.poo.billetera_model.Billetera_virtual;
 import uniquindio.edu.poo.billetera_model.BuscarCategoria;
-import uniquindio.edu.poo.billetera_model.Categoria;
-import uniquindio.edu.poo.billetera_model.Presupuesto;
-import uniquindio.edu.poo.billetera_model.Sesion;
+import uniquindio.edu.poo.mapping.dto.PresupuestoDto;
+import uniquindio.edu.poo.mapping.mappers.BancoMapper;
 
 public class GestionPresupuestosController {
 
     @FXML
-    private TableView<Presupuesto> TablaPresupuestos;
+    private TableView<PresupuestoDto> tablaPresupuestos;
 
     @FXML
-    private TableColumn<Presupuesto, String> IdField;
+    private TableColumn<PresupuestoDto, String> idField;
 
     @FXML
-    private TableColumn<Presupuesto, String> NombreField;
+    private TableColumn<PresupuestoDto, String> nombreField;
 
     @FXML
-    private TableColumn<Presupuesto, Double> MontoField;
+    private TableColumn<PresupuestoDto, Double> montoField;
 
     @FXML
-    private TableColumn<Presupuesto, Double> MontoGastadoField;
+    private TableColumn<PresupuestoDto, Double> montoGastadoField;
 
     @FXML
-    private TableColumn<Presupuesto, String> CategoriaField;
+    private TableColumn<PresupuestoDto, String> categoriaField;
 
-    private static Billetera_virtual billeteraVirtual;
-    private ObservableList<Presupuesto> presupuestosPorUsuario;
-
-    public GestionPresupuestosController() {
-        this.billeteraVirtual = Billetera_virtual.getInstancia();
-    }
+    private BancoMapper bancoMapper = BancoMapper.INSTANCE;
+    private ObservableList<PresupuestoDto> presupuestos = FXCollections.observableArrayList();
 
     @FXML
     private void initialize() {
 
-        IdField.setCellValueFactory(new PropertyValueFactory<>("id"));
-        NombreField.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-        MontoField.setCellValueFactory(new PropertyValueFactory<>("monto"));
-        MontoGastadoField.setCellValueFactory(new PropertyValueFactory<>("montoGastado"));
+        // Convertir presupuestos a PresupuestoDto y agregar a la lista observable
+        Billetera_virtual.getInstancia().getPresupuestos().stream()
+                .map(bancoMapper::presupuestoToPresupuestoDto)
+                .forEach(presupuestos::add);
 
-        CategoriaField.setCellValueFactory(cellData -> {
-            Presupuesto presupuesto = cellData.getValue();
-            String idCategoria = presupuesto.getIdCategoria();
+        idField.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().id()));
+        nombreField.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().nombre()));
+        montoField.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().monto()));
+        montoGastadoField
+                .setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().montoGastado()));
 
-            Categoria categoria = BuscarCategoria.buscarCategoriaPorID(idCategoria);
-            String nombreCategoria = (categoria != null) ? categoria.getNombre() : "Categoría desconocida";
-
-            return new javafx.beans.property.SimpleStringProperty(nombreCategoria);
+        montoField.setCellFactory(column -> {
+            return new TableCell<PresupuestoDto, Double>() {
+                @Override
+                protected void updateItem(Double item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText(null);
+                    } else {
+                        setText(String.format("%.2f", item));
+                    }
+                }
+            };
         });
+
+        montoGastadoField.setCellFactory(column -> {
+            return new TableCell<PresupuestoDto, Double>() {
+                @Override
+                protected void updateItem(Double item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText(null);
+                    } else {
+                        setText(String.format("%.2f", item));
+                    }
+                }
+            };
+        });
+
+        // Columna de categoría usando SimpleStringProperty para buscar nombre de la
+        // categoría
+        categoriaField.setCellValueFactory(cellData -> {
+            String idCategoria = cellData.getValue().idCategoria();
+            String nombreCategoria = BuscarCategoria.buscarCategoriaPorID(idCategoria) != null
+                    ? BuscarCategoria.buscarCategoriaPorID(idCategoria).getNombre()
+                    : "Categoría desconocida";
+            return new SimpleStringProperty(nombreCategoria);
+        });
+
+        // Asignar lista observable a la tabla
+        tablaPresupuestos.setItems(presupuestos);
     }
 
     @FXML
@@ -76,22 +107,6 @@ public class GestionPresupuestosController {
     @FXML
     private void EliminarPresupuesto() throws IOException {
         App.setRoot("EliminacionPresupuesto", "Eliminación Presupuesto");
-    }
-
-    @FXML
-    private void MostrarPresupuestos() {
-        String idUsuario = Sesion.getIdUsuario();
-
-        List<Presupuesto> listaPresupuestos = billeteraVirtual.getPresupuestos().stream()
-                .filter(presupuesto -> presupuesto.getIdUsuario().equals(idUsuario))
-                .collect(Collectors.toList());
-
-        if (!listaPresupuestos.isEmpty()) {
-            presupuestosPorUsuario = FXCollections.observableArrayList(listaPresupuestos);
-            TablaPresupuestos.setItems(presupuestosPorUsuario);
-        } else {
-            System.out.println("No se encontraron presupuestos para el usuario con ID: " + idUsuario);
-        }
     }
 
     @FXML

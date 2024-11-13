@@ -9,10 +9,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import uniquindio.edu.poo.billetera_app.App;
 import uniquindio.edu.poo.billetera_model.Billetera_virtual;
-import uniquindio.edu.poo.billetera_model.Cuenta;
 import uniquindio.edu.poo.billetera_model.GeneradorNumeroCuenta;
 import uniquindio.edu.poo.billetera_model.TipoCuenta;
+import uniquindio.edu.poo.billetera_model.Cuenta;
 import uniquindio.edu.poo.billetera_model.GeneradorCodigoCuenta;
+import uniquindio.edu.poo.mapping.dto.CuentaDto;
+import uniquindio.edu.poo.mapping.mappers.BancoMapper;
 
 public class CreacionCuentaController {
 
@@ -41,6 +43,7 @@ public class CreacionCuentaController {
     private Label mensajeLabel;
 
     private Billetera_virtual billeteraVirtual;
+    private BancoMapper bancoMapper = BancoMapper.INSTANCE;
 
     public CreacionCuentaController() {
         this.billeteraVirtual = Billetera_virtual.getInstancia();
@@ -89,16 +92,15 @@ public class CreacionCuentaController {
         String idCuentaUnico = GeneradorCodigoCuenta.generarCodigoUnico(5, cuentasExistentes);
         String numeroCuentaUnico = GeneradorNumeroCuenta.generarNumeroUnico(10, cuentasExistentes);
 
-        Cuenta nuevaCuenta = new Cuenta(idUsuario, idCuentaUnico, nombreBanco, numeroCuentaUnico,
+        CuentaDto nuevaCuentaDto = new CuentaDto(idUsuario, idCuentaUnico, nombreBanco, numeroCuentaUnico,
                 tipoCuentaSeleccionado, 0.0);
 
-        billeteraVirtual.getCuentaCRUD().crear(nuevaCuenta);
+        billeteraVirtual.getCuentaCRUD().crear(bancoMapper.cuentaDtoToCuenta(nuevaCuentaDto));
 
         IDcuentaField.setText(idCuentaUnico);
         numeroCuentaField.setText(numeroCuentaUnico);
 
-        mensajeLabel
-                .setText("Cuenta creada con éxito.");
+        mensajeLabel.setText("Cuenta creada con éxito.");
         mensajeLabel.setVisible(true);
     }
 
@@ -106,5 +108,4 @@ public class CreacionCuentaController {
     private void Volver() throws IOException {
         App.setRoot("GestionCuentas", "Gestión Cuentas");
     }
-
 }
