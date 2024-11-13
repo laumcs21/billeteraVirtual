@@ -16,14 +16,16 @@ import uniquindio.edu.poo.billetera_model.GenerarCodigoTransaccion;
 import uniquindio.edu.poo.billetera_model.Presupuesto;
 import uniquindio.edu.poo.billetera_model.Sesion;
 import uniquindio.edu.poo.billetera_model.TipoTransaccion;
-import uniquindio.edu.poo.billetera_model.Transaccion;
 import uniquindio.edu.poo.billetera_model.Usuario;
+import uniquindio.edu.poo.billetera_model.Transaccion;
 import uniquindio.edu.poo.billetera_model.BuscarUsuarioPorID;
 import uniquindio.edu.poo.billetera_model.Categoria;
 import uniquindio.edu.poo.billetera_model.BuscarCuenta;
 import uniquindio.edu.poo.billetera_model.BuscarPresupuesto;
 import uniquindio.edu.poo.billetera_exception.MontoInvalidoException;
 import uniquindio.edu.poo.billetera_exception.SaldoInsuficienteException;
+import uniquindio.edu.poo.mapping.dto.TransaccionDto;
+import uniquindio.edu.poo.mapping.mappers.BancoMapper;
 
 public class CreacionTransaccionesController {
 
@@ -52,6 +54,7 @@ public class CreacionTransaccionesController {
     private Label mensajeLabel;
 
     private Billetera_virtual billeteraVirtual;
+    private BancoMapper bancoMapper = BancoMapper.INSTANCE;
 
     public CreacionTransaccionesController() {
         this.billeteraVirtual = Billetera_virtual.getInstancia();
@@ -118,7 +121,6 @@ public class CreacionTransaccionesController {
         double monto;
         TipoTransaccion tipo = tipoTransaccionComboBox.getValue();
 
-        // Verifica si los campos de usuario y cuenta origen están completos
         if (idUsuario.isEmpty() || numeroCuentaOrigen.isEmpty() || montoField.getText().isEmpty()) {
             mensajeLabel.setText("Por favor, complete todos los campos obligatorios.");
             mensajeLabel.setVisible(true);
@@ -131,7 +133,6 @@ public class CreacionTransaccionesController {
             return;
         }
 
-        // Verifica si el monto es un número válido
         try {
             monto = Double.parseDouble(montoField.getText());
             if (monto <= 0) {
@@ -147,7 +148,6 @@ public class CreacionTransaccionesController {
             return;
         }
 
-        // Verificar si la cuenta origen existe
         Optional<Cuenta> cuentaOrigenOpt = billeteraVirtual.getCuentas().stream()
                 .filter(cuenta -> cuenta.getNumeroCuenta().equals(numeroCuentaOrigen))
                 .findFirst();
@@ -158,7 +158,6 @@ public class CreacionTransaccionesController {
             return;
         }
 
-        // Verificar si la cuenta pertenece al usuario
         if (!cuentaOrigenOpt.get().getIdUsuario().equals(idUsuario)) {
             mensajeLabel.setText("La cuenta de origen no pertenece al usuario.");
             mensajeLabel.setVisible(true);
@@ -179,18 +178,14 @@ public class CreacionTransaccionesController {
             return;
         }
 
-        // Obtener el código de la categoría seleccionada y verificar presupuesto
-        Optional<Categoria> categoriaOpt = billeteraVirtual.getCategorias().stream()
-                .filter(categoria -> categoria.getNombre().equals(categoriaSeleccionada))
-                .findFirst();
+        Optional<Categoria> categoriaOpt = (categoriaSeleccionada != null
+                && !categoriaSeleccionada.equals("Seleccione una categoría"))
+                        ? billeteraVirtual.getCategorias().stream()
+                                .filter(categoria -> categoria.getNombre().equals(categoriaSeleccionada))
+                                .findFirst()
+                        : Optional.empty();
 
-        if (!categoriaOpt.isPresent()) {
-            mensajeLabel.setText("La categoría seleccionada no es válida.");
-            mensajeLabel.setVisible(true);
-            return;
-        }
-
-        String codigoCategoria = categoriaOpt.get().getId();
+        String codigoCategoria = categoriaOpt.map(Categoria::getId).orElse(null);
 
         Optional<Presupuesto> presupuestoOpt = BuscarPresupuesto.buscarPresupuestoPorCodigoCategoria(codigoCategoria);
         if (presupuestoOpt.isPresent()) {
@@ -208,7 +203,6 @@ public class CreacionTransaccionesController {
             presupuesto.setMontoGastado(montoGastadoNuevo);
         }
 
-        // Si el tipo de transacción es TRANSFERENCIA, verificar la cuenta destino
         if (tipo == TipoTransaccion.TRANSFERENCIA) {
             if (numeroCuentaDestino == null || numeroCuentaDestino.isEmpty()) {
                 mensajeLabel.setText("Por favor, ingrese el número de cuenta destino.");
@@ -216,7 +210,6 @@ public class CreacionTransaccionesController {
                 return;
             }
 
-            // Verificar si la cuenta destino existe
             Optional<Cuenta> cuentaDestinoOpt = billeteraVirtual.getCuentas().stream()
                     .filter(cuenta -> cuenta.getNumeroCuenta().equals(numeroCuentaDestino))
                     .findFirst();
@@ -231,8 +224,8 @@ public class CreacionTransaccionesController {
         List<Transaccion> transaccionesExistentes = billeteraVirtual.getTransacciones();
         String idTransaccionUnico = GenerarCodigoTransaccion.generarCodigoUnico(5, transaccionesExistentes);
 
-        Transaccion nuevaTransaccion = new Transaccion.Builder(idUsuario, idTransaccionUnico, LocalDate.now(), tipo,
-                monto, numeroCuentaOrigen)
+        TransaccionDto nuevaTransaccionDto = new TransaccionDto.Builder(idUsuario, idTransaccionUnico, LocalDate.now(),
+                tipo, monto, numeroCuentaOrigen)
                 .conNumeroCuentaDestino(
                         tipo == TipoTransaccion.DEPOSITO || tipo == TipoTransaccion.TRANSFERENCIA ? numeroCuentaDestino
                                 : null)
@@ -241,50 +234,52 @@ public class CreacionTransaccionesController {
                 .conCategoria(codigoCategoria)
                 .build();
 
-        // Guardar la transacción
+        Transaccion nuevaTransaccion = bancoMapper.transaccionDtoToTransaccion(nuevaTransaccionDto);
         billeteraVirtual.getTransaccionCRUD().crear(nuevaTransaccion);
         mensajeLabel.setText("Transacción creada con éxito.");
         mensajeLabel.setVisible(true);
 
-        // Actualizar saldos y presupuesto si es necesario
         if (tipo == TipoTransaccion.DEPOSITO) {
-            Cuenta cuenta = BuscarCuenta.buscarCuentaPorNumero(numeroCuentaOrigen);
-            double saldoNuevo = cuenta.getSaldo() + monto;
-            cuenta.setSaldo(saldoNuevo);
-            billeteraVirtual.getCuentaCRUD().actualizar(cuenta);
-
-            Usuario usuario = BuscarUsuarioPorID.buscarUsuarioPorIdentificacion(idUsuario);
-            usuario.actualizarSaldoTotal();
-            billeteraVirtual.getUsuarioCRUD().actualizar(usuario);
-
+            actualizarSaldoCuentaYUsuario(numeroCuentaOrigen, monto, idUsuario, true);
         } else if (tipo == TipoTransaccion.RETIRO) {
-            Cuenta cuenta = BuscarCuenta.buscarCuentaPorNumero(numeroCuentaOrigen);
-            double saldoNuevo = cuenta.getSaldo() - monto;
-            cuenta.setSaldo(saldoNuevo);
-            billeteraVirtual.getCuentaCRUD().actualizar(cuenta);
-
-            Usuario usuario = BuscarUsuarioPorID.buscarUsuarioPorIdentificacion(idUsuario);
-            usuario.actualizarSaldoTotal();
-            billeteraVirtual.getUsuarioCRUD().actualizar(usuario);
+            actualizarSaldoCuentaYUsuario(numeroCuentaOrigen, monto, idUsuario, false);
         } else {
-            double saldoNuevoO = cuentaOrigen.getSaldo() - monto;
-            cuentaOrigen.setSaldo(saldoNuevoO);
-            billeteraVirtual.getCuentaCRUD().actualizar(cuentaOrigen);
-
-            Cuenta cuentaDestino = BuscarCuenta.buscarCuentaPorNumero(numeroCuentaDestino);
-            double saldoNuevoD = cuentaDestino.getSaldo() + monto;
-            cuentaDestino.setSaldo(saldoNuevoD);
-            billeteraVirtual.getCuentaCRUD().actualizar(cuentaDestino);
-
-            Usuario usuarioOrigen = BuscarUsuarioPorID.buscarUsuarioPorIdentificacion(idUsuario);
-            usuarioOrigen.actualizarSaldoTotal();
-            billeteraVirtual.getUsuarioCRUD().actualizar(usuarioOrigen);
-
-            String idUsuarioDestino = cuentaDestino.getIdUsuario();
-            Usuario usuarioDestino = BuscarUsuarioPorID.buscarUsuarioPorIdentificacion(idUsuarioDestino);
-            usuarioDestino.actualizarSaldoTotal();
-            billeteraVirtual.getUsuarioCRUD().actualizar(usuarioDestino);
+            actualizarSaldoParaTransferencia(numeroCuentaOrigen, numeroCuentaDestino, monto, idUsuario);
         }
+    }
+
+    private void actualizarSaldoCuentaYUsuario(String numeroCuenta, double monto, String idUsuario,
+            boolean esDeposito) {
+        Cuenta cuenta = BuscarCuenta.buscarCuentaPorNumero(numeroCuenta);
+        double saldoNuevo = esDeposito ? cuenta.getSaldo() + monto : cuenta.getSaldo() - monto;
+        cuenta.setSaldo(saldoNuevo);
+        billeteraVirtual.getCuentaCRUD().actualizar(cuenta);
+
+        Usuario usuario = BuscarUsuarioPorID.buscarUsuarioPorIdentificacion(idUsuario);
+        usuario.actualizarSaldoTotal();
+        billeteraVirtual.getUsuarioCRUD().actualizar(usuario);
+    }
+
+    private void actualizarSaldoParaTransferencia(String numeroCuentaOrigen, String numeroCuentaDestino, double monto,
+            String idUsuarioOrigen) {
+        Cuenta cuentaOrigen = BuscarCuenta.buscarCuentaPorNumero(numeroCuentaOrigen);
+        double saldoNuevoO = cuentaOrigen.getSaldo() - monto;
+        cuentaOrigen.setSaldo(saldoNuevoO);
+        billeteraVirtual.getCuentaCRUD().actualizar(cuentaOrigen);
+
+        Cuenta cuentaDestino = BuscarCuenta.buscarCuentaPorNumero(numeroCuentaDestino);
+        double saldoNuevoD = cuentaDestino.getSaldo() + monto;
+        cuentaDestino.setSaldo(saldoNuevoD);
+        billeteraVirtual.getCuentaCRUD().actualizar(cuentaDestino);
+
+        Usuario usuarioOrigen = BuscarUsuarioPorID.buscarUsuarioPorIdentificacion(idUsuarioOrigen);
+        usuarioOrigen.actualizarSaldoTotal();
+        billeteraVirtual.getUsuarioCRUD().actualizar(usuarioOrigen);
+
+        String idUsuarioDestino = cuentaDestino.getIdUsuario();
+        Usuario usuarioDestino = BuscarUsuarioPorID.buscarUsuarioPorIdentificacion(idUsuarioDestino);
+        usuarioDestino.actualizarSaldoTotal();
+        billeteraVirtual.getUsuarioCRUD().actualizar(usuarioDestino);
     }
 
     @FXML

@@ -1,64 +1,108 @@
 package uniquindio.edu.poo.billetera_controller;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import uniquindio.edu.poo.billetera_app.App;
 import uniquindio.edu.poo.billetera_model.Billetera_virtual;
-import uniquindio.edu.poo.billetera_model.Transaccion;
-import uniquindio.edu.poo.billetera_model.Usuario;
 import uniquindio.edu.poo.billetera_model.Sesion;
-import uniquindio.edu.poo.billetera_model.BuscarUsuarioPorID;
+import uniquindio.edu.poo.mapping.dto.TransaccionDto;
+import uniquindio.edu.poo.mapping.mappers.BancoMapper;
 
 public class GestionTransaccionesController {
 
     @FXML
-    private TableView<Transaccion> tablaTransacciones;
+    private TableView<TransaccionDto> tablaTransacciones;
 
     @FXML
-    private TableColumn<Transaccion, String> fechaField;
+    private TableColumn<TransaccionDto, String> fechaField;
 
     @FXML
-    private TableColumn<Transaccion, String> IDtransaccionField;
+    private TableColumn<TransaccionDto, String> IDtransaccionField;
 
     @FXML
-    private TableColumn<Transaccion, String> idUsuarioField;
+    private TableColumn<TransaccionDto, String> idUsuarioField;
 
     @FXML
-    private TableColumn<Transaccion, String> cuentaOrigenField;
+    private TableColumn<TransaccionDto, String> cuentaOrigenField;
 
     @FXML
-    private TableColumn<Transaccion, String> tipoField;
+    private TableColumn<TransaccionDto, String> tipoField;
 
     @FXML
-    private TableColumn<Transaccion, Double> montoField;
+    private TableColumn<TransaccionDto, Double> montoField;
 
     @FXML
-    private TableColumn<Transaccion, String> cuentaDestinoField;
+    private TableColumn<TransaccionDto, String> cuentaDestinoField;
 
     @FXML
-    private TableColumn<Transaccion, String> descripcionField;
+    private TableColumn<TransaccionDto, String> descripcionField;
 
     @FXML
-    private TableColumn<Transaccion, String> categoriaField;
+    private TableColumn<TransaccionDto, String> categoriaField;
 
-    private static Billetera_virtual billeteraVirtual;
-    String idUsuario = Sesion.getIdUsuario();
-
-    private ObservableList<Transaccion> todasTransacciones = FXCollections
-            .observableArrayList(Billetera_virtual.getInstancia().getTransacciones());
-
-    private ObservableList<Transaccion> TransaccionesPorUsuario;
+    private BancoMapper mapper = BancoMapper.INSTANCE;
+    private ObservableList<TransaccionDto> todasTransacciones = FXCollections.observableArrayList();
+    private ObservableList<TransaccionDto> transaccionesPorUsuario;
+    private String idUsuario = Sesion.getIdUsuario();
 
     public GestionTransaccionesController() {
-        this.billeteraVirtual = Billetera_virtual.getInstancia();
+        cargarTransacciones();
+    }
+
+    @FXML
+    private void initialize() {
+        DecimalFormat formatoDecimal = new DecimalFormat("#.00");
+
+        fechaField.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().fecha().toString()));
+        IDtransaccionField.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().id()));
+        idUsuarioField.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().idUsuario()));
+        cuentaOrigenField
+                .setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().numeroCuentaOrigen()));
+        tipoField.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().tipo().toString()));
+        montoField.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().monto()));
+        montoField.setCellFactory(column -> new TableCell<TransaccionDto, Double>() {
+            @Override
+            protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : formatoDecimal.format(item));
+            }
+        });
+        cuentaDestinoField.setCellValueFactory(
+                cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().numeroCuentaDestino()));
+        descripcionField
+                .setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().descripcion()));
+        categoriaField.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().idCategoria()));
+
+    }
+
+    private void cargarTransacciones() {
+        Billetera_virtual.getInstancia().getTransacciones().stream()
+                .map(mapper::transaccionToTransaccionDto)
+                .forEach(todasTransacciones::add);
+    }
+
+    @FXML
+    private void mostrarTransacciones() throws IOException {
+        if (Sesion.getEsAdmin()) {
+            tablaTransacciones.setItems(todasTransacciones);
+        } else {
+            List<TransaccionDto> listaTransacciones = todasTransacciones.stream()
+                    .filter(transaccion -> transaccion.idUsuario().equals(idUsuario))
+                    .collect(Collectors.toList());
+
+            transaccionesPorUsuario = FXCollections.observableArrayList(listaTransacciones);
+            tablaTransacciones.setItems(transaccionesPorUsuario);
+        }
     }
 
     @FXML
@@ -67,51 +111,8 @@ public class GestionTransaccionesController {
     }
 
     @FXML
-    private void initialize() {
-        fechaField.setCellValueFactory(new PropertyValueFactory<>("fecha"));
-        IDtransaccionField.setCellValueFactory(new PropertyValueFactory<>("id"));
-        idUsuarioField.setCellValueFactory(new PropertyValueFactory<>("idUsuario"));
-        cuentaOrigenField.setCellValueFactory(new PropertyValueFactory<>("numeroCuentaOrigen"));
-        tipoField.setCellValueFactory(new PropertyValueFactory<>("tipo"));
-        montoField.setCellValueFactory(new PropertyValueFactory<>("monto"));
-        cuentaDestinoField.setCellValueFactory(new PropertyValueFactory<>("numeroCuentaDestino"));
-        descripcionField.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
-        categoriaField.setCellValueFactory(new PropertyValueFactory<>("nombreCategoria"));
-    }
-
-    @FXML
-    private void mostrarTransacciones() throws IOException {
-        if (Sesion.getEsAdmin()) {
-            tablaTransacciones.setItems(todasTransacciones);
-        } else {
-
-            Usuario usuario = BuscarUsuarioPorID.buscarUsuarioPorIdentificacion(idUsuario);
-
-            if (usuario != null) {
-                List<Transaccion> listaTransacciones = billeteraVirtual.getTransacciones().stream()
-                        .filter(Transaccion -> Transaccion.getIdUsuario().equals(usuario.getId()))
-                        .collect(Collectors.toList());
-
-                if (!listaTransacciones.isEmpty()) {
-                    TransaccionesPorUsuario = FXCollections.observableArrayList(listaTransacciones);
-                    tablaTransacciones.setItems(TransaccionesPorUsuario);
-                } else {
-                    System.out.println("No se encontraron transacciones para el usuario con ID: " + usuario.getId());
-                }
-            } else {
-                System.out.println("No se encontró el usuario con ID: " + idUsuario);
-            }
-
-        }
-    }
-
-    @FXML
     private void Volver() throws IOException {
-        if (Sesion.getEsAdmin()) {
-            App.setRoot("Administrador", "Administrador");
-        } else {
-            App.setRoot("Usuario", "Usuario");
-        }
+        App.setRoot(Sesion.getEsAdmin() ? "Administrador" : "Usuario",
+                Sesion.getEsAdmin() ? "Administrador" : "Usuario");
     }
-
 }
