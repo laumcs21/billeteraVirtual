@@ -44,19 +44,26 @@ public class EliminacionUsuarioController {
     private void EliminarUsuario() throws IOException {
         String identificacion = identificacionField.getText();
 
-        if (identificacion.isEmpty() || identificacion == null) {
+        if (identificacion.isEmpty()) {
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("Por favor, ingrese una identificación.");
             mensajeLabel.setStyle("-fx-text-fill: red;");
             return;
         }
+
         try {
             billeteraVirtual.getUsuarioCRUD().eliminar(identificacion);
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("Usuario eliminado exitosamente.");
-        } catch (Exception e) {
+            mensajeLabel.setStyle("-fx-text-fill: green;");
+        } catch (IllegalArgumentException e) {
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("El usuario no está registrado.");
+            mensajeLabel.setStyle("-fx-text-fill: red;");
+        } catch (Exception e) {
+            mensajeLabel.setVisible(true);
+            mensajeLabel.setText("Error al eliminar el usuario.");
+            mensajeLabel.setStyle("-fx-text-fill: red;");
         }
     }
 
@@ -64,5 +71,4 @@ public class EliminacionUsuarioController {
     private void Volver() throws IOException {
         App.setRoot("GestionUsuarios", "Gestión Usuarios");
     }
-
 }

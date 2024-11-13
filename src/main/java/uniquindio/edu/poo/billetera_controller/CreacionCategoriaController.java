@@ -10,7 +10,9 @@ import javafx.scene.control.TextField;
 import uniquindio.edu.poo.billetera_app.App;
 import uniquindio.edu.poo.billetera_model.Billetera_virtual;
 import uniquindio.edu.poo.billetera_model.GeneradorCodigoCategoria;
+import uniquindio.edu.poo.mapping.mappers.BancoMapper;
 import uniquindio.edu.poo.billetera_model.Categoria;
+import uniquindio.edu.poo.mapping.dto.CategoriaDto;
 
 public class CreacionCategoriaController {
 
@@ -24,15 +26,17 @@ public class CreacionCategoriaController {
     private Label mensajeLabel;
 
     private Billetera_virtual billeteraVirtual;
+    private BancoMapper bancoMapper = BancoMapper.INSTANCE;
 
     public CreacionCategoriaController() {
         this.billeteraVirtual = Billetera_virtual.getInstancia();
+
     }
 
     @FXML
     public void initialize() {
         mensajeLabel.setVisible(false);
-        nombreField.setPromptText("ID usuario");
+        nombreField.setPromptText("Nombre");
         descripcionField.setPromptText("Descripción (opcional)");
 
         TextField[] fields = { nombreField };
@@ -73,11 +77,11 @@ public class CreacionCategoriaController {
         List<Categoria> categoriasExistentes = billeteraVirtual.getCategorias();
         String idCategoriaUnico = GeneradorCodigoCategoria.generarCodigoUnico(5, categoriasExistentes);
 
-        Categoria categoria = new Categoria.Builder(idCategoriaUnico, nombre)
+        CategoriaDto categoriaDto = new CategoriaDto.Builder(idCategoriaUnico, nombre)
                 .conDescripcion(
                         descripcion.isEmpty() || descripcion.equals("Descripción (opcional)") ? null : descripcion)
                 .build();
-
+        Categoria categoria = bancoMapper.categoriaDtoToCategoria(categoriaDto);
         billeteraVirtual.getCategoriaCRUD().crear(categoria);
         mensajeLabel.setText("Categoría creada con éxito.");
         mensajeLabel.setVisible(true);

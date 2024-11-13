@@ -16,8 +16,7 @@
       <TextField fx:id="correoField" layoutX="59.0" layoutY="126.0" opacity="0.48" prefHeight="25.0" prefWidth="438.0" promptText="Correo" />
       <TextField fx:id="telefonoField" layoutX="59.0" layoutY="161.0" opacity="0.48" prefHeight="25.0" prefWidth="438.0" promptText="Telefono" />
       <TextField fx:id="direccionField" layoutX="59.0" layoutY="200.0" opacity="0.48" prefHeight="25.0" prefWidth="438.0" promptText="Dirección" />
-      <TextField fx:id="saldoInicialField" layoutX="59.0" layoutY="236.0" opacity="0.48" prefHeight="25.0" prefWidth="438.0" promptText="Saldo Inicial" />
-      <PasswordField fx:id="contraseñaField" layoutX="59.0" layoutY="271.0" opacity="0.48" prefHeight="25.0" prefWidth="438.0" promptText="Contraseña" />
+      <PasswordField fx:id="contraseñaField" layoutX="59.0" layoutY="236.0" opacity="0.48" prefHeight="25.0" prefWidth="438.0" promptText="Contraseña" />
       <Label fx:id="mensajeLabel" layoutX="59.0" layoutY="358.0" text="Mensaje aquí" />
    </children>
 </Pane>

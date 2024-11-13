@@ -37,7 +37,6 @@ public class GestionUsuariosController {
     @FXML
     private TableColumn<UsuarioDto, Double> saldoActualField;
 
-    // Instancia del mapper para convertir entidades a DTOs
     private BancoMapper mapper = BancoMapper.INSTANCE;
 
     private ObservableList<UsuarioDto> usuarios = FXCollections.observableArrayList();
@@ -46,14 +45,12 @@ public class GestionUsuariosController {
     private void initialize() {
         DecimalFormat formatoDecimal = new DecimalFormat("#");
 
-        // Configuración personalizada para cada columna usando un Callback
         identificacionField.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().id()));
         nombreField.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().nombre()));
         correoField.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().correo()));
         telefonoField.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().telefono()));
         direccionField.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().direccion()));
 
-        // Usar un formato especial para la columna saldoActualField
         saldoActualField.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().saldoTotal()));
         saldoActualField.setCellFactory(column -> {
             return new TableCell<UsuarioDto, Double>() {

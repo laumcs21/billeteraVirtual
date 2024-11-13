@@ -1,32 +1,42 @@
 package uniquindio.edu.poo.billetera_controller;
 
 import java.io.IOException;
+
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import uniquindio.edu.poo.billetera_app.App;
 import uniquindio.edu.poo.billetera_model.Billetera_virtual;
-import uniquindio.edu.poo.billetera_model.Categoria;
+import uniquindio.edu.poo.mapping.dto.CategoriaDto;
+import uniquindio.edu.poo.mapping.mappers.BancoMapper;
 
 public class GestionCategoriasController {
 
     @FXML
-    private TableView<Categoria> tablaCategorias;
+    private TableView<CategoriaDto> tablaCategorias;
 
     @FXML
-    private TableColumn<Categoria, String> idField;
+    private TableColumn<CategoriaDto, String> idField;
 
     @FXML
-    private TableColumn<Categoria, String> nombreField;
+    private TableColumn<CategoriaDto, String> nombreField;
 
     @FXML
-    private TableColumn<Categoria, String> descripcionField;
+    private TableColumn<CategoriaDto, String> descripcionField;
 
-    private ObservableList<Categoria> categorias = FXCollections
-            .observableArrayList(Billetera_virtual.getInstancia().getCategorias());
+    private BancoMapper mapper = BancoMapper.INSTANCE;
+
+    private ObservableList<CategoriaDto> categorias = FXCollections.observableArrayList();
+
+    private void cargarCategorias() {
+        Billetera_virtual.getInstancia().getCategorias().stream()
+                .map(mapper::categoriaToCategoriaDto)
+                .forEach(categorias::add);
+        tablaCategorias.setItems(categorias);
+    }
 
     @FXML
     private void CrearCategoria() throws IOException {
@@ -45,14 +55,11 @@ public class GestionCategoriasController {
 
     @FXML
     private void initialize() {
-        idField.setCellValueFactory(new PropertyValueFactory<>("id"));
-        nombreField.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-        descripcionField.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
-    }
-
-    @FXML
-    private void mostrarCategorias() throws IOException {
-        tablaCategorias.setItems(categorias);
+        idField.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().id()));
+        nombreField.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().nombre()));
+        descripcionField
+                .setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().descripcion()));
+        cargarCategorias();
     }
 
     @FXML

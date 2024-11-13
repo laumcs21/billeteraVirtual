@@ -8,6 +8,8 @@ import javafx.scene.control.TextField;
 import uniquindio.edu.poo.billetera_app.App;
 import uniquindio.edu.poo.billetera_model.Billetera_virtual;
 import uniquindio.edu.poo.billetera_model.Categoria;
+import uniquindio.edu.poo.mapping.dto.CategoriaDto;
+import uniquindio.edu.poo.mapping.mappers.BancoMapper;
 
 public class ActualizacionCategoriaController {
 
@@ -26,6 +28,7 @@ public class ActualizacionCategoriaController {
     private Categoria categoriaEncontrada;
 
     private Billetera_virtual billeteraVirtual;
+    private BancoMapper bancoMapper = BancoMapper.INSTANCE;
 
     public ActualizacionCategoriaController() {
         this.billeteraVirtual = Billetera_virtual.getInstancia();
@@ -74,7 +77,8 @@ public class ActualizacionCategoriaController {
         try {
             categoriaEncontrada = billeteraVirtual.getCategoriaCRUD().leer(identificacion);
             if (categoriaEncontrada != null) {
-                llenarCamposConCategoria(categoriaEncontrada);
+                CategoriaDto categoriaDto = bancoMapper.categoriaToCategoriaDto(categoriaEncontrada);
+                llenarCamposConCategoria(categoriaDto);
                 mensajeLabel.setVisible(false);
             } else {
                 mensajeLabel.setVisible(true);
@@ -88,9 +92,9 @@ public class ActualizacionCategoriaController {
         }
     }
 
-    private void llenarCamposConCategoria(Categoria categoria) {
-        nombreField.setText(categoria.getNombre());
-        descripcionField.setText(categoria.getDescripcion());
+    private void llenarCamposConCategoria(CategoriaDto categoriaDto) {
+        nombreField.setText(categoriaDto.nombre());
+        descripcionField.setText(categoriaDto.descripcion());
     }
 
     @FXML
@@ -106,6 +110,7 @@ public class ActualizacionCategoriaController {
         categoriaEncontrada.setDescripcion(descripcionField.getText());
 
         try {
+
             billeteraVirtual.getCategoriaCRUD().actualizar(categoriaEncontrada);
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("Categoría actualizada exitosamente.");

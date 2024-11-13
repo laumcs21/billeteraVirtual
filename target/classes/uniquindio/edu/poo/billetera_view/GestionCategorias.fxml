@@ -18,7 +18,6 @@
             <TableColumn fx:id="descripcionField" minWidth="0.0" prefWidth="299.66668701171875" text="Descripción" />
         </columns>
       </TableView>
-      <Button layoutX="352.0" layoutY="93.0" mnemonicParsing="false" onAction="#mostrarCategorias" text="Mostrar Categorías" />
       <Button layoutX="480.0" layoutY="349.0" mnemonicParsing="false" onAction="#Volver" text="Volver" />
    </children>
 </Pane>

@@ -2,14 +2,15 @@ package uniquindio.edu.poo.billetera_controller;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import uniquindio.edu.poo.billetera_app.App;
 import uniquindio.edu.poo.billetera_model.Billetera_virtual;
+import uniquindio.edu.poo.mapping.dto.UsuarioDto;
 import uniquindio.edu.poo.billetera_model.Usuario;
+import uniquindio.edu.poo.mapping.mappers.BancoMapper;
 
 public class LecturaUsuarioController {
 
@@ -35,8 +36,7 @@ public class LecturaUsuarioController {
     private Label mensajeLabel;
 
     private Billetera_virtual billeteraVirtual;
-
-    private Usuario usuarioEncontrado;
+    private BancoMapper bancoMapper = BancoMapper.INSTANCE;
 
     public LecturaUsuarioController() {
         this.billeteraVirtual = Billetera_virtual.getInstancia();
@@ -72,9 +72,10 @@ public class LecturaUsuarioController {
         }
 
         try {
-            usuarioEncontrado = billeteraVirtual.getUsuarioCRUD().leer(identificacion);
+            Usuario usuarioEncontrado = billeteraVirtual.getUsuarioCRUD().leer(identificacion);
             if (usuarioEncontrado != null) {
-                llenarCamposConUsuario(usuarioEncontrado);
+                UsuarioDto usuarioDto = bancoMapper.usuarioToUsuarioDto(usuarioEncontrado); // Convertir a DTO
+                llenarCamposConUsuario(usuarioDto);
                 mensajeLabel.setVisible(false);
             } else {
                 mensajeLabel.setVisible(true);
@@ -88,18 +89,17 @@ public class LecturaUsuarioController {
         }
     }
 
-    private void llenarCamposConUsuario(Usuario usuario) {
+    private void llenarCamposConUsuario(UsuarioDto usuarioDto) {
         DecimalFormat formatoDecimal = new DecimalFormat("#");
-        nombreField.setText(usuario.getNombre());
-        correoField.setText(usuario.getCorreo());
-        telefonoField.setText(usuario.getTelefono());
-        direccionField.setText(usuario.getDireccion());
-        saldoActualField.setText(formatoDecimal.format(usuario.getSaldoTotal()));
+        nombreField.setText(usuarioDto.nombre());
+        correoField.setText(usuarioDto.correo());
+        telefonoField.setText(usuarioDto.telefono());
+        direccionField.setText(usuarioDto.direccion());
+        saldoActualField.setText(formatoDecimal.format(usuarioDto.saldoTotal()));
     }
 
     @FXML
     private void Volver() throws IOException {
         App.setRoot("GestionUsuarios", "Gestión Usuarios");
     }
-
 }

@@ -9,6 +9,8 @@ import uniquindio.edu.poo.billetera_exception.ContrasenaException;
 import uniquindio.edu.poo.billetera_exception.CorreoElectronicoException;
 import uniquindio.edu.poo.billetera_model.Billetera_virtual;
 import uniquindio.edu.poo.billetera_model.Usuario;
+import uniquindio.edu.poo.mapping.dto.UsuarioDto;
+import uniquindio.edu.poo.mapping.mappers.BancoMapper;
 
 public class RegistroController {
 
@@ -28,15 +30,13 @@ public class RegistroController {
     private TextField direccionField;
 
     @FXML
-    private TextField saldoInicialField;
-
-    @FXML
     private TextField contraseñaField;
 
     @FXML
     private Label mensajeLabel;
 
     private Billetera_virtual billeteraVirtual;
+    private BancoMapper bancoMapper = BancoMapper.INSTANCE;
 
     public RegistroController() {
         this.billeteraVirtual = Billetera_virtual.getInstancia();
@@ -50,11 +50,10 @@ public class RegistroController {
         correoField.setPromptText("Correo");
         telefonoField.setPromptText("Telefono");
         direccionField.setPromptText("Dirección");
-        saldoInicialField.setPromptText("Saldo inicial");
         contraseñaField.setPromptText("Contraseña");
 
         TextField[] fields = { identificacionField, nombreField, correoField, telefonoField,
-                direccionField, saldoInicialField, contraseñaField };
+                direccionField, contraseñaField };
 
         for (TextField field : fields) {
             field.setOnMouseClicked(event -> limpiarCampoTexto(field));
@@ -77,11 +76,10 @@ public class RegistroController {
         String correo = correoField.getText();
         String telefono = telefonoField.getText();
         String direccion = direccionField.getText();
-        String saldoInicialText = saldoInicialField.getText();
         String contraseña = contraseñaField.getText();
 
         if (identificacion.isEmpty() || nombre.isEmpty() || correo.isEmpty() || telefono.isEmpty()
-                || direccion.isEmpty() || saldoInicialText.isEmpty() || contraseña.isEmpty()) {
+                || direccion.isEmpty() || contraseña.isEmpty()) {
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("Por favor, complete todos los campos.");
             mensajeLabel.setStyle("-fx-text-fill: red;");
@@ -89,31 +87,40 @@ public class RegistroController {
         }
 
         try {
-            double saldoInicial = Double.parseDouble(saldoInicialText);
 
-            Usuario usuario = new Usuario(identificacion, contraseña, nombre, correo, telefono, direccion,
-                    saldoInicial);
+            // Crear UsuarioDto con los datos del formulario
+            UsuarioDto usuarioDto = new UsuarioDto(identificacion, contraseña, nombre, correo, telefono, direccion,
+                    0.0);
+
+            // Mapear UsuarioDto a Usuario
+            Usuario usuario = bancoMapper.usuarioDtoToUsuario(usuarioDto);
 
             billeteraVirtual.getUsuarioCRUD().crear(usuario);
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("Usuario registrado exitosamente.");
+            mensajeLabel.setStyle("-fx-text-fill: green;");
             limpiarCampos();
 
         } catch (NumberFormatException e) {
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("Saldo inicial debe ser un número válido.");
+            mensajeLabel.setStyle("-fx-text-fill: red;");
         } catch (IllegalArgumentException e) {
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("El usuario ya está registrado.");
+            mensajeLabel.setStyle("-fx-text-fill: red;");
         } catch (CorreoElectronicoException e) {
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("El correo electrónico no es válido");
+            mensajeLabel.setStyle("-fx-text-fill: red;");
         } catch (ContrasenaException e) {
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("La contraseña debe contener mínimo una letra y un número");
+            mensajeLabel.setStyle("-fx-text-fill: red;");
         } catch (Exception e) {
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("Error al crear el usuario");
+            mensajeLabel.setStyle("-fx-text-fill: red;");
         }
     }
 
@@ -123,7 +130,6 @@ public class RegistroController {
         correoField.clear();
         telefonoField.clear();
         direccionField.clear();
-        saldoInicialField.clear();
         contraseñaField.clear();
 
         identificacionField.setPromptText("Identificación");
@@ -131,7 +137,6 @@ public class RegistroController {
         correoField.setPromptText("Correo");
         telefonoField.setPromptText("Telefono");
         direccionField.setPromptText("Dirección");
-        saldoInicialField.setPromptText("Saldo inicial");
         contraseñaField.setPromptText("Contraseña");
     }
 

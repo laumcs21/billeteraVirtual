@@ -88,21 +88,15 @@ public class CreacionUsuarioController {
             return;
         }
 
-        // Validación de correo y contraseña
-        if (!UsuarioCRUD.esCorreoValido(correo)) {
-            mensajeLabel.setVisible(true);
-            mensajeLabel.setText("El correo electrónico no es válido");
-            return;
-        }
-
-        if (!UsuarioCRUD.esContrasenaValida(contraseña)) {
-            mensajeLabel.setVisible(true);
-            mensajeLabel.setText("La contraseña debe contener mínimo una letra y un número");
-            return;
-        }
-
         try {
-            // Crear UsuarioDto y mapearlo a Usuario
+            if (!UsuarioCRUD.esCorreoValido(correo)) {
+                throw new CorreoElectronicoException("El correo electrónico no es válido");
+            }
+
+            if (!UsuarioCRUD.esContrasenaValida(contraseña)) {
+                throw new ContrasenaException("La contraseña debe contener mínimo una letra y un número");
+            }
+
             UsuarioDto usuarioDto = new UsuarioDto(identificacion, nombre, correo, telefono, direccion, contraseña,
                     0.0);
             Usuario usuario = bancoMapper.usuarioDtoToUsuario(usuarioDto);
@@ -111,6 +105,14 @@ public class CreacionUsuarioController {
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("Usuario creado exitosamente.");
             mensajeLabel.setStyle("-fx-text-fill: green;");
+        } catch (CorreoElectronicoException e) {
+            mensajeLabel.setVisible(true);
+            mensajeLabel.setText(e.getMessage());
+            mensajeLabel.setStyle("-fx-text-fill: red;");
+        } catch (ContrasenaException e) {
+            mensajeLabel.setVisible(true);
+            mensajeLabel.setText(e.getMessage());
+            mensajeLabel.setStyle("-fx-text-fill: red;");
         } catch (IllegalArgumentException e) {
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("El usuario ya está registrado.");
