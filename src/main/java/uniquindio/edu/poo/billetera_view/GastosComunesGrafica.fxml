@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.XYChart?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uniquindio.edu.poo.billetera_controller.GastosComunesGraficaController">
+    <center>
+        <BarChart fx:id="gastosBarChart" prefHeight="400.0" prefWidth="600.0">
+            <xAxis>
+                <CategoryAxis fx:id="xAxis" label="Tipo de Gasto"/>
+            </xAxis>
+            <yAxis>
+                <NumberAxis fx:id="yAxis" label="Cantidad"/>
+            </yAxis>
+        </BarChart>
+    </center>
+    <bottom>
+        <Button fx:id="volverButton" text="Volver" onAction="#volver" BorderPane.alignment="CENTER"/>
+    </bottom>
+</BorderPane>

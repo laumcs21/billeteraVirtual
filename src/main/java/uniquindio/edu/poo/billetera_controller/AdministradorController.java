@@ -28,7 +28,7 @@ public class AdministradorController {
 
     @FXML
     private void Estadisticas() throws IOException {
-        App.setRoot("GestionCuentas", "Gestión Cuentas");
+        App.setRoot("Estadisticas", "Estadisticas");
     }
 
     @FXML

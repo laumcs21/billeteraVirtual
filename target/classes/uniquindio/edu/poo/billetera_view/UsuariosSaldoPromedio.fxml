@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uniquindio.edu.poo.billetera_controller.UsuariosSaldoPromedioController">
+   <children>
+      <TableView fx:id="usuariosTable" layoutX="50.0" layoutY="80.0" prefHeight="200.0" prefWidth="500.0">
+        <columns>
+          <TableColumn fx:id="nombreColumn" prefWidth="250.0" text="Nombre del Usuario" />
+          <TableColumn fx:id="saldoColumn" prefWidth="150.0" text="Saldo" />
+          <TableColumn fx:id="promedioColumn" prefWidth="100.0" text="Promedio" />
+        </columns>
+      </TableView>
+      <Button fx:id="verGraficaButton" layoutX="200.0" layoutY="300.0" mnemonicParsing="false" onAction="#verGrafica" text="Ver Gráfica">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="volverButton" layoutX="400.0" layoutY="300.0" mnemonicParsing="false" onAction="#volver" text="Volver">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Label layoutX="200.0" layoutY="20.0" text="Saldo de Usuarios y Promedio" textAlignment="CENTER">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+   </children>
+</Pane>

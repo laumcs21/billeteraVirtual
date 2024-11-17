@@ -23,7 +23,7 @@ public class Administrador extends Persona implements Serializable {
     public static Administrador getInstance() {
         if (instancia == null) {
             instancia = new Administrador(
-                    "1001198723",
+                    "123",
                     "1111",
                     "Laura Milena Cardenas",
                     "Laumcs21@gmail.com",

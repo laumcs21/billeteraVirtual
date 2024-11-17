@@ -117,6 +117,7 @@ public class ActualizacionCuentaController {
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("Cuenta actualizada exitosamente.");
             mensajeLabel.setStyle("-fx-text-fill: green;");
+        
         } catch (Exception e) {
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("Error al actualizar la cuenta.");

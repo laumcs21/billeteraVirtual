@@ -6,6 +6,9 @@ module uniquindio.edu.poo {
     requires java.desktop;
     requires org.mapstruct;
     requires java.base;
+    requires java.compiler;
+    
+   
 
     // Abrir paquetes para la reflexión de JavaFX (por ejemplo, para FXML)
     opens uniquindio.edu.poo.billetera_app to javafx.fxml;
