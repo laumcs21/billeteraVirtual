@@ -7,6 +7,9 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import uniquindio.edu.poo.billetera_app.App;
+import uniquindio.edu.poo.billetera_exception.CampoVacioException;
+import uniquindio.edu.poo.billetera_exception.FormatoNumericoIncorrectoException;
+import uniquindio.edu.poo.billetera_exception.UsuarioNoEncontradoException;
 import uniquindio.edu.poo.billetera_model.Billetera_virtual;
 import uniquindio.edu.poo.billetera_model.TipoCuenta;
 import uniquindio.edu.poo.mapping.dto.CuentaDto;
@@ -73,6 +76,19 @@ public class ActualizacionCuentaController {
             return;
         }
         try {
+
+            if (IDcuentaField.getText().isEmpty()) {
+                throw new CampoVacioException("El campo ID no puede estar vacío.");
+            }
+
+            if (!id.matches("\\d+")) {
+                throw new FormatoNumericoIncorrectoException("El ID de usuario debe contener solo números.");
+            }
+
+            var usuario = billeteraVirtual.getUsuarios().stream()
+                .filter(u -> u.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new UsuarioNoEncontradoException("Usuario con ID " + id + " no encontrado."));
             var cuenta = billeteraVirtual.getCuentaCRUD().leer(id);
             if (cuenta != null) {
                 cuentaEncontradaDto = bancoMapper.cuentaToCuentaDto(cuenta);
@@ -83,6 +99,20 @@ public class ActualizacionCuentaController {
                 mensajeLabel.setText("La cuenta no se ha creado.");
                 mensajeLabel.setStyle("-fx-text-fill: red;");
             }
+
+        } catch (CampoVacioException e) {
+            mensajeLabel.setVisible(true);
+            mensajeLabel.setText(e.getMessage());
+            mensajeLabel.setStyle("-fx-text-fill: red;");
+        } catch (FormatoNumericoIncorrectoException e) {
+            mensajeLabel.setVisible(true);
+            mensajeLabel.setText(e.getMessage());
+            mensajeLabel.setStyle("-fx-text-fill: red;");
+
+        } catch (UsuarioNoEncontradoException e) {
+            mensajeLabel.setVisible(true);
+            mensajeLabel.setText(e.getMessage());
+            mensajeLabel.setStyle("-fx-text-fill: red;");
         } catch (Exception e) {
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("Error al cargar la cuenta.");

@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import uniquindio.edu.poo.billetera_app.App;
+import uniquindio.edu.poo.billetera_exception.FormatoNumericoIncorrectoException;
 import uniquindio.edu.poo.billetera_model.Billetera_virtual;
 
 public class EliminacionCategoriaController {
@@ -55,9 +56,18 @@ public class EliminacionCategoriaController {
         }
 
         try {
+
+            if (!identificacion.matches("\\d+")) {
+                throw new FormatoNumericoIncorrectoException("El ID de categoria debe contener solo números.");
+            }
             billeteraVirtual.getCategoriaCRUD().eliminar(identificacion);
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("Categoría eliminada exitosamente.");
+
+        } catch (FormatoNumericoIncorrectoException e) {
+            mensajeLabel.setVisible(true);
+            mensajeLabel.setText(e.getMessage());
+            mensajeLabel.setStyle("-fx-text-fill: red;");
         } catch (Exception e) {
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("La categoría no existe.");

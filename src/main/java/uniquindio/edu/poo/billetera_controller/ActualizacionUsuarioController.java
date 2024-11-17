@@ -5,6 +5,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import uniquindio.edu.poo.billetera_app.App;
+import uniquindio.edu.poo.billetera_exception.CampoVacioException;
+import uniquindio.edu.poo.billetera_exception.FormatoNumericoIncorrectoException;
 import uniquindio.edu.poo.billetera_model.Billetera_virtual;
 import uniquindio.edu.poo.billetera_model.Usuario;
 import uniquindio.edu.poo.billetera_model.Sesion;
@@ -83,6 +85,13 @@ public class ActualizacionUsuarioController {
         }
 
         try {
+
+            if (identificacionField.getText().isEmpty()) {
+                throw new CampoVacioException("El campo ID no puede estar vacío.");
+            }
+             if (!identificacion.matches("\\d+")) {
+                throw new FormatoNumericoIncorrectoException("El ID de usuario debe contener solo números.");
+            }
             usuarioEncontrado = billeteraVirtual.getUsuarioCRUD().leer(identificacion);
             if (usuarioEncontrado != null) {
                 // Convertir el Usuario a UsuarioDto para llenar los campos
@@ -94,6 +103,15 @@ public class ActualizacionUsuarioController {
                 mensajeLabel.setText("El usuario no está registrado.");
                 mensajeLabel.setStyle("-fx-text-fill: red;");
             }
+
+        } catch (CampoVacioException e) {
+            mensajeLabel.setVisible(true);
+            mensajeLabel.setText(e.getMessage());
+            mensajeLabel.setStyle("-fx-text-fill: red;");
+        } catch (FormatoNumericoIncorrectoException e) {
+            mensajeLabel.setVisible(true);
+            mensajeLabel.setText(e.getMessage());
+            mensajeLabel.setStyle("-fx-text-fill: red;");
         } catch (Exception e) {
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("Error al buscar el usuario.");

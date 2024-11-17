@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import uniquindio.edu.poo.billetera_app.App;
+import uniquindio.edu.poo.billetera_exception.FormatoNumericoIncorrectoException;
 import uniquindio.edu.poo.billetera_model.Billetera_virtual;
 
 public class EliminacionCuentaController {
@@ -54,9 +55,20 @@ public class EliminacionCuentaController {
             return;
         }
         try {
+
+            if (!id.matches("\\d+")) {
+                throw new FormatoNumericoIncorrectoException("El ID de cuenta debe contener solo números.");
+            }
+
+            
             billeteraVirtual.getCuentaCRUD().eliminar(id);
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("Cuenta eliminada exitosamente.");
+
+        } catch (FormatoNumericoIncorrectoException e) {
+            mensajeLabel.setVisible(true);
+            mensajeLabel.setText(e.getMessage());
+            mensajeLabel.setStyle("-fx-text-fill: red;");
         } catch (Exception e) {
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("La cuenta no se ha creado.");

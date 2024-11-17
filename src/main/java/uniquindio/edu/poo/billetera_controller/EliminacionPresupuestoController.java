@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import uniquindio.edu.poo.billetera_app.App;
+import uniquindio.edu.poo.billetera_exception.FormatoNumericoIncorrectoException;
 import uniquindio.edu.poo.billetera_model.Billetera_virtual;
 
 public class EliminacionPresupuestoController {
@@ -55,10 +56,19 @@ public class EliminacionPresupuestoController {
         }
 
         try {
+
+            if (!idPresupuesto.matches("\\d+")) {
+                throw new FormatoNumericoIncorrectoException("El ID de presupuesto debe contener solo números.");
+            }
             billeteraVirtual.getPresupuestoCRUD().eliminar(idPresupuesto);
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("Presupuesto eliminado exitosamente.");
             mensajeLabel.setStyle("-fx-text-fill: green;");
+
+        } catch (FormatoNumericoIncorrectoException e) {
+            mensajeLabel.setVisible(true);
+            mensajeLabel.setText(e.getMessage());
+            mensajeLabel.setStyle("-fx-text-fill: red;");
         } catch (Exception e) {
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("El presupuesto no existe o no se pudo eliminar.");

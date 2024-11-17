@@ -8,6 +8,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import uniquindio.edu.poo.billetera_app.App;
+import uniquindio.edu.poo.billetera_exception.CampoVacioException;
+import uniquindio.edu.poo.billetera_exception.FormatoNumericoIncorrectoException;
 import uniquindio.edu.poo.billetera_model.Billetera_virtual;
 import uniquindio.edu.poo.billetera_model.BuscarCategoria;
 import uniquindio.edu.poo.billetera_model.Categoria;
@@ -77,7 +79,19 @@ public class ActualizacionPresupuestoController {
         }
 
         try {
+
+            if (idField.getText().isEmpty()) {
+                throw new CampoVacioException("El campo ID no puede estar vacío.");
+            }
+
+            if (!idPresupuesto.matches("\\d+")) {
+                throw new FormatoNumericoIncorrectoException("El ID de presupuesto debe contener solo números.");
+            }
+
+            
             Presupuesto presupuesto = billeteraVirtual.getPresupuestoCRUD().leer(idPresupuesto);
+
+            
             if (presupuesto != null) {
                 presupuestoEncontradoDto = bancoMapper.presupuestoToPresupuestoDto(presupuesto);
                 llenarCamposConPresupuesto(presupuestoEncontradoDto);
@@ -87,6 +101,15 @@ public class ActualizacionPresupuestoController {
                 mensajeLabel.setText("El presupuesto no está registrado.");
                 mensajeLabel.setStyle("-fx-text-fill: red;");
             }
+
+        } catch (CampoVacioException e) {
+            mensajeLabel.setVisible(true);
+            mensajeLabel.setText(e.getMessage());
+            mensajeLabel.setStyle("-fx-text-fill: red;");
+        } catch (FormatoNumericoIncorrectoException e) {
+            mensajeLabel.setVisible(true);
+            mensajeLabel.setText(e.getMessage());
+            mensajeLabel.setStyle("-fx-text-fill: red;");
         } catch (Exception e) {
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("Error al buscar el presupuesto.");

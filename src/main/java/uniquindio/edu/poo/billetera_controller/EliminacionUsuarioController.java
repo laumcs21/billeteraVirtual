@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import uniquindio.edu.poo.billetera_app.App;
+import uniquindio.edu.poo.billetera_exception.FormatoNumericoIncorrectoException;
 import uniquindio.edu.poo.billetera_model.Billetera_virtual;
 
 public class EliminacionUsuarioController {
@@ -52,10 +53,20 @@ public class EliminacionUsuarioController {
         }
 
         try {
+
+            if (!identificacion.matches("\\d+")) {
+                throw new FormatoNumericoIncorrectoException("El ID de usuario debe contener solo números.");
+            }
+
             billeteraVirtual.getUsuarioCRUD().eliminar(identificacion);
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("Usuario eliminado exitosamente.");
             mensajeLabel.setStyle("-fx-text-fill: green;");
+
+        } catch (FormatoNumericoIncorrectoException e) {
+            mensajeLabel.setVisible(true);
+            mensajeLabel.setText(e.getMessage());
+            mensajeLabel.setStyle("-fx-text-fill: red;");
         } catch (IllegalArgumentException e) {
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("El usuario no está registrado.");
