@@ -7,6 +7,10 @@ import javafx.scene.control.TextField;
 import uniquindio.edu.poo.billetera_app.App;
 import uniquindio.edu.poo.billetera_exception.ContrasenaException;
 import uniquindio.edu.poo.billetera_exception.CorreoElectronicoException;
+import uniquindio.edu.poo.billetera_exception.CorreoExistenteException;
+import uniquindio.edu.poo.billetera_exception.DireccionInvalidaException;
+import uniquindio.edu.poo.billetera_exception.NombreInvalidoException;
+import uniquindio.edu.poo.billetera_exception.TelefonoInvalidoException;
 import uniquindio.edu.poo.billetera_model.Billetera_virtual;
 import uniquindio.edu.poo.billetera_model.Usuario;
 import uniquindio.edu.poo.mapping.dto.UsuarioDto;
@@ -88,6 +92,23 @@ public class RegistroController {
 
         try {
 
+            if (billeteraVirtual.getUsuarios().stream().anyMatch(u -> u.getCorreo().equals(correo))) {
+                throw new CorreoExistenteException("Ya existe un usuario registrado con este correo.");
+            }
+
+            if (!nombre.matches("[a-zA-Z ]{3,50}")) {
+                throw new NombreInvalidoException(
+                        "El nombre solo puede contener letras y debe tener entre 3 y 50 caracteres.");
+            }
+
+            if (direccion.length() < 5) {
+                throw new DireccionInvalidaException("La dirección debe tener al menos 5 caracteres.");
+            }
+
+            if (!telefono.matches("\\d{7,10}")) { // Asumiendo que el teléfono debe tener entre 7 y 10 dígitos
+                throw new TelefonoInvalidoException("El teléfono debe contener entre 7 y 10 dígitos numéricos.");
+            }
+
             // Crear UsuarioDto con los datos del formulario
             UsuarioDto usuarioDto = new UsuarioDto(identificacion, contraseña, nombre, correo, telefono, direccion,
                     0.0);
@@ -117,11 +138,28 @@ public class RegistroController {
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("La contraseña debe contener mínimo una letra y un número");
             mensajeLabel.setStyle("-fx-text-fill: red;");
+        } catch (TelefonoInvalidoException e) {
+            mensajeLabel.setVisible(true);
+            mensajeLabel.setText(e.getMessage());
+            mensajeLabel.setStyle("-fx-text-fill: red;");
+        } catch (DireccionInvalidaException e) {
+            mensajeLabel.setVisible(true);
+            mensajeLabel.setText(e.getMessage());
+            mensajeLabel.setStyle("-fx-text-fill: red;");
+        } catch (NombreInvalidoException e) {
+            mensajeLabel.setVisible(true);
+            mensajeLabel.setText(e.getMessage());
+            mensajeLabel.setStyle("-fx-text-fill: red;");
+        }catch (CorreoExistenteException e) {
+            mensajeLabel.setVisible(true);
+            mensajeLabel.setText(e.getMessage());
+            mensajeLabel.setStyle("-fx-text-fill: red;");
         } catch (Exception e) {
             mensajeLabel.setVisible(true);
             mensajeLabel.setText("Error al crear el usuario");
             mensajeLabel.setStyle("-fx-text-fill: red;");
         }
+
     }
 
     private void limpiarCampos() {
