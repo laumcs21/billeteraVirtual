@@ -5,6 +5,7 @@ import java.time.LocalDate;
 
 import lombok.Getter;
 import lombok.Setter;
+import uniquindio.edu.poo.rabbitmq.TransactionProducer;
 
 @Getter
 @Setter
@@ -98,5 +99,10 @@ public class Transaccion implements Serializable {
                 (descripcion != null ? ", descripcion='" + descripcion + '\'' : "") +
                 (idCategoria != null ? ", categoria='" + idCategoria + '\'' : "") +
                 '}';
+    }
+
+    public void enviarMensajeTransaccion() {
+        TransactionProducer producer = new TransactionProducer();
+        producer.produceTransaction(this.toString());
     }
 }
