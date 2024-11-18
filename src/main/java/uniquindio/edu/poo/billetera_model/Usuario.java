@@ -12,6 +12,7 @@ public class Usuario extends Persona implements Serializable {
     public double saldoTotal;
     private Billetera_virtual billeteraVirtual;
 
+
     public Usuario(String id, String contraseña, String nombre, String correo, String telefono, String direccion,
             double saldoTotal) {
         super(id, contraseña, nombre, correo, telefono, direccion);

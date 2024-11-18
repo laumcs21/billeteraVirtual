@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uniquindio.edu.poo.billetera_controller.CalificacionController">
+   <children>
+      <Label layoutX="101.0" layoutY="59.0" text="Califica tu experiencia en la Billetera Virtual">
+         <font>
+            <Font name="System Bold Italic" size="19.0" />
+         </font>
+      </Label>
+      <TextField fx:id="CalificacionField" layoutX="225.0" layoutY="159.0" onAction="#InsertarCalificacion" />
+      <Label layoutX="240.0" layoutY="142.0" text="Muy mal 1-5 Muy bien" />
+      <Button fx:id="EnviarLabel" layoutX="274.0" layoutY="234.0" mnemonicParsing="false" onAction="#Enviar" text="Enviar" />
+      <Button fx:id="VolverLabel" layoutX="509.0" layoutY="340.0" mnemonicParsing="false" onAction="#Volver" text="Volver" />
+      <Label fx:id="mensajeLabel" layoutX="225.0" layoutY="200.0" text="" />
+   </children>
+</Pane>

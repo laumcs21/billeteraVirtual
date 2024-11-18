@@ -1,7 +1,10 @@
 package uniquindio.edu.poo.billetera_controller;
 
 import java.io.IOException;
+
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import uniquindio.edu.poo.billetera_app.App;
 import uniquindio.edu.poo.billetera_model.Sesion;
@@ -14,6 +17,9 @@ public class UsuarioController {
 
     private String idUsuario = Sesion.getIdUsuario();
     private BancoMapper bancoMapper = BancoMapper.INSTANCE;
+
+    @FXML
+    private Button calificacionLabel;
 
     @FXML
     private TextArea saldoField;
@@ -50,6 +56,12 @@ public class UsuarioController {
     @FXML
     private void Presupuesto() throws IOException {
         App.setRoot("GestionPresupuestos", "Gestion Presupuestos");
+    }
+
+    @FXML
+    void Calificar() throws IOException {
+        App.setRoot("Calificacion", "Calificacion");
+
     }
 
     @FXML

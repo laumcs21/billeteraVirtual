@@ -17,7 +17,7 @@ import uniquindio.edu.poo.mapping.dto.UsuarioDto;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-11-17T22:41:26-0500",
+    date = "2024-11-18T09:44:12-0500",
     comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.40.0.z20241023-1306, environment: Java 17.0.13 (Eclipse Adoptium)"
 )
 public class BancoMapperImpl implements BancoMapper {
